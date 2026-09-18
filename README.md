@@ -52,7 +52,7 @@ NFCove/
 └── Resources/      Info.plist, entitlements and localization
 ```
 
-See [docs/en/architecture.md](docs/en/architecture.md) for the architecture and roadmap, and [docs/en/ipa.md](docs/en/ipa.md) for IPA builds and signing.
+See [docs/en/architecture.md](docs/en/architecture.md) for the architecture and roadmap, [docs/en/ipa.md](docs/en/ipa.md) for IPA builds and signing, and [docs/en/testing.md](docs/en/testing.md) for the physical-device release gate.
 
 ## Product direction
 
