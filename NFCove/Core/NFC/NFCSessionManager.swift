@@ -11,6 +11,8 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
     @Published private(set) var records: [NFCRecordSnapshot] = []
     @Published private(set) var statusKey = "nfc.status.ready"
     @Published private(set) var lastError: String?
+    @Published private(set) var tagCapacity: Int?
+    @Published private(set) var tagAccessKey: String?
 
     private var session: NFCNDEFReaderSession?
     private var operation: Operation = .read
@@ -25,14 +27,13 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
             return
         }
 
-        records = []
-        lastError = nil
+        resetResult()
         operation = .read
 
         let reader = NFCNDEFReaderSession(
             delegate: self,
             queue: nil,
-            invalidateAfterFirstRead: true
+            invalidateAfterFirstRead: false
         )
         reader.alertMessage = AppLocalization.string("nfc.scan.prompt")
         session = reader
@@ -45,7 +46,7 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
             return
         }
 
-        lastError = nil
+        resetResult(keepRecords: true)
         operation = .write(message)
 
         let reader = NFCNDEFReaderSession(
@@ -65,26 +66,53 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
         }
     }
 
+    // Core NFC doesn't call this callback when readerSession(_:didDetect:)
+    // is implemented. It remains here to satisfy the delegate contract and
+    // as a fallback for future session changes.
     func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
         guard case .read = operation else { return }
-
-        let snapshots = messages.flatMap(\.records).map(Self.snapshot(from:))
-
-        DispatchQueue.main.async { [weak self] in
-            self?.records = snapshots
-            self?.statusKey = snapshots.isEmpty ? "nfc.status.empty" : "nfc.status.readSuccess"
-        }
+        completeRead(messages: messages, session: session)
     }
 
     func readerSession(_ session: NFCNDEFReaderSession, didDetect tags: [NFCNDEFTag]) {
-        guard case let .write(message) = operation else { return }
-
         guard tags.count == 1, let tag = tags.first else {
             session.alertMessage = AppLocalization.string("nfc.error.multipleTags")
             session.restartPolling()
             return
         }
 
+        switch operation {
+        case .read:
+            read(tag: tag, in: session)
+        case let .write(message):
+            write(message: message, to: tag, in: session)
+        }
+    }
+
+    func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
+        DispatchQueue.main.async { [weak self] in
+            self?.isActive = false
+            self?.session = nil
+
+            if let readerError = error as? NFCReaderError,
+               readerError.code == .readerSessionInvalidationErrorUserCanceled {
+                if self?.statusKey == "nfc.status.scanning" {
+                    self?.statusKey = "nfc.status.ready"
+                }
+                return
+            }
+
+            if let readerError = error as? NFCReaderError,
+               readerError.code == .readerSessionInvalidationErrorFirstNDEFTagRead {
+                return
+            }
+
+            self?.lastError = error.localizedDescription
+            self?.statusKey = "nfc.status.failed"
+        }
+    }
+
+    private func read(tag: NFCNDEFTag, in session: NFCNDEFReaderSession) {
         session.connect(to: tag) { [weak self] error in
             if let error {
                 self?.fail(session: session, error: error)
@@ -96,6 +124,45 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
                     self?.fail(session: session, error: error)
                     return
                 }
+
+                guard status != .notSupported else {
+                    self?.fail(session: session, messageKey: "nfc.error.notSupported")
+                    return
+                }
+
+                self?.publishTagInfo(status: status, capacity: capacity)
+
+                tag.readNDEF { [weak self] message, error in
+                    if let error {
+                        self?.fail(session: session, error: error)
+                        return
+                    }
+
+                    guard let message else {
+                        self?.completeRead(messages: [], session: session)
+                        return
+                    }
+
+                    self?.completeRead(messages: [message], session: session)
+                }
+            }
+        }
+    }
+
+    private func write(message: NFCNDEFMessage, to tag: NFCNDEFTag, in session: NFCNDEFReaderSession) {
+        session.connect(to: tag) { [weak self] error in
+            if let error {
+                self?.fail(session: session, error: error)
+                return
+            }
+
+            tag.queryNDEFStatus { [weak self] status, capacity, error in
+                if let error {
+                    self?.fail(session: session, error: error)
+                    return
+                }
+
+                self?.publishTagInfo(status: status, capacity: capacity)
 
                 guard status == .readWrite else {
                     let key = status == .readOnly ? "nfc.error.readOnly" : "nfc.error.notSupported"
@@ -114,34 +181,70 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
                         return
                     }
 
-                    session.alertMessage = AppLocalization.string("nfc.write.success")
-                    session.invalidate()
-                    DispatchQueue.main.async {
-                        self?.statusKey = "nfc.status.writeSuccess"
-                    }
+                    self?.verify(message: message, on: tag, in: session)
                 }
             }
         }
     }
 
-    func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
+    private func verify(message expected: NFCNDEFMessage, on tag: NFCNDEFTag, in session: NFCNDEFReaderSession) {
+        tag.readNDEF { [weak self] actual, error in
+            if let error {
+                DispatchQueue.main.async {
+                    self?.lastError = AppLocalization.string("nfc.error.verification")
+                    self?.statusKey = "nfc.status.writeUnverified"
+                }
+                session.alertMessage = AppLocalization.string("nfc.write.unverified")
+                session.invalidate()
+                return
+            }
+
+            guard let actual, Self.messagesMatch(expected, actual) else {
+                DispatchQueue.main.async {
+                    self?.lastError = AppLocalization.string("nfc.error.verification")
+                    self?.statusKey = "nfc.status.writeUnverified"
+                }
+                session.alertMessage = AppLocalization.string("nfc.write.unverified")
+                session.invalidate()
+                return
+            }
+
+            DispatchQueue.main.async {
+                self?.statusKey = "nfc.status.writeVerified"
+                self?.records = actual.records.map(Self.snapshot(from:))
+            }
+            session.alertMessage = AppLocalization.string("nfc.write.verified")
+            session.invalidate()
+        }
+    }
+
+    private func completeRead(messages: [NFCNDEFMessage], session: NFCNDEFReaderSession) {
+        let snapshots = messages.flatMap(\.records).map(Self.snapshot(from:))
+
         DispatchQueue.main.async { [weak self] in
-            self?.isActive = false
-            self?.session = nil
+            self?.records = snapshots
+            self?.statusKey = snapshots.isEmpty ? "nfc.status.empty" : "nfc.status.readSuccess"
+        }
 
-            if let readerError = error as? NFCReaderError,
-               readerError.code == .readerSessionInvalidationErrorFirstNDEFTagRead {
-                return
+        session.alertMessage = snapshots.isEmpty
+            ? AppLocalization.string("nfc.read.empty")
+            : AppLocalization.string("nfc.read.success")
+        session.invalidate()
+    }
+
+    private func publishTagInfo(status: NFCNDEFStatus, capacity: Int) {
+        DispatchQueue.main.async { [weak self] in
+            self?.tagCapacity = capacity
+            switch status {
+            case .readWrite:
+                self?.tagAccessKey = "nfc.access.readWrite"
+            case .readOnly:
+                self?.tagAccessKey = "nfc.access.readOnly"
+            case .notSupported:
+                self?.tagAccessKey = "nfc.access.notSupported"
+            @unknown default:
+                self?.tagAccessKey = "nfc.access.unknown"
             }
-
-            if let readerError = error as? NFCReaderError,
-               readerError.code == .readerSessionInvalidationErrorUserCanceled {
-                self?.statusKey = "nfc.status.ready"
-                return
-            }
-
-            self?.lastError = error.localizedDescription
-            self?.statusKey = "nfc.status.failed"
         }
     }
 
@@ -168,9 +271,29 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
         }
     }
 
+    private func resetResult(keepRecords: Bool = false) {
+        if !keepRecords {
+            records = []
+        }
+        lastError = nil
+        tagCapacity = nil
+        tagAccessKey = nil
+    }
+
     private static func estimatedMessageSize(_ message: NFCNDEFMessage) -> Int {
         message.records.reduce(0) { result, payload in
             result + payload.payload.count + payload.type.count + payload.identifier.count + 6
+        }
+    }
+
+    private static func messagesMatch(_ lhs: NFCNDEFMessage, _ rhs: NFCNDEFMessage) -> Bool {
+        guard lhs.records.count == rhs.records.count else { return false }
+
+        return zip(lhs.records, rhs.records).allSatisfy { left, right in
+            left.typeNameFormat == right.typeNameFormat &&
+            left.type == right.type &&
+            left.identifier == right.identifier &&
+            left.payload == right.payload
         }
     }
 
@@ -186,12 +309,22 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
                 kind = .url
             }
 
-            return NFCRecordSnapshot(kind: kind, title: kind.rawValue.capitalized, value: value, byteCount: payload.payload.count)
+            return NFCRecordSnapshot(
+                kind: kind,
+                title: kind.rawValue.capitalized,
+                value: value,
+                byteCount: payload.payload.count
+            )
         }
 
         let (text, _) = payload.wellKnownTypeTextPayload()
         if let text {
-            return NFCRecordSnapshot(kind: .text, title: "Text", value: text, byteCount: payload.payload.count)
+            return NFCRecordSnapshot(
+                kind: .text,
+                title: "Text",
+                value: text,
+                byteCount: payload.payload.count
+            )
         }
 
         return NFCRecordSnapshot(
