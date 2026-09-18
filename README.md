@@ -6,6 +6,8 @@ NFCove is a modern, native NFC toolkit for iPhone. The project starts with the e
 
 > Documentation: **English** · [Español](README.es.md)
 
+> **Current development version:** 0.2.1 (build 3). Tagged releases are produced from the same tested IPA pipeline used by CI.
+
 ## Current foundation
 
 - Native SwiftUI interface
