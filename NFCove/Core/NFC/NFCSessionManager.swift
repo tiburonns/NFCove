@@ -133,6 +133,12 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
                 self?.publishTagInfo(status: status, capacity: capacity)
 
                 tag.readNDEF { [weak self] message, error in
+                    if let readerError = error as? NFCReaderError,
+                       readerError.code == .ndefReaderSessionErrorZeroLengthMessage {
+                        self?.completeRead(messages: [], session: session)
+                        return
+                    }
+
                     if let error {
                         self?.fail(session: session, error: error)
                         return
@@ -281,9 +287,7 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
     }
 
     private static func estimatedMessageSize(_ message: NFCNDEFMessage) -> Int {
-        message.records.reduce(0) { result, payload in
-            result + payload.payload.count + payload.type.count + payload.identifier.count + 6
-        }
+        message.length
     }
 
     private static func messagesMatch(_ lhs: NFCNDEFMessage, _ rhs: NFCNDEFMessage) -> Bool {
