@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
       - name: Xcode version
         run: |
@@ -45,6 +45,10 @@ jobs:
           xcodebuild -project NFCove.xcodeproj -list
           plutil -lint NFCove/Resources/Info.plist
           plutil -lint NFCove/Resources/NFCove.entitlements
+          plutil -lint NFCove/Resources/PrivacyInfo.xcprivacy
+
+      - name: Run core logic tests
+        run: zsh Tests/run-core-tests.sh
 
       - name: Build simulator
         run: |
