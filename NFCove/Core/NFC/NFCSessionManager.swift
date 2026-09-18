@@ -2,7 +2,7 @@ import Combine
 import CoreNFC
 import Foundation
 
-final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
+final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate, @unchecked Sendable {
     enum Operation {
         case read
         case write(NFCNDEFMessage)
@@ -33,7 +33,7 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
 
         let reader = NFCNDEFReaderSession(
             delegate: self,
-            queue: nil,
+            queue: DispatchQueue.main,
             invalidateAfterFirstRead: false
         )
         reader.alertMessage = AppLocalization.string("nfc.scan.prompt")
@@ -52,7 +52,7 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
 
         let reader = NFCNDEFReaderSession(
             delegate: self,
-            queue: nil,
+            queue: DispatchQueue.main,
             invalidateAfterFirstRead: false
         )
         reader.alertMessage = AppLocalization.string("nfc.write.prompt")
@@ -216,9 +216,10 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
                 return
             }
 
+            let snapshots = actual.records.map(Self.snapshot(from:))
             DispatchQueue.main.async {
                 self?.statusKey = "nfc.status.writeVerified"
-                self?.records = actual.records.map(Self.snapshot(from:))
+                self?.records = snapshots
             }
             session.alertMessage = AppLocalization.string("nfc.write.verified")
             session.invalidate()
@@ -240,27 +241,31 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
     }
 
     private func publishTagInfo(status: NFCNDEFStatus, capacity: Int) {
+        let accessKey: String
+        switch status {
+        case .readWrite:
+            accessKey = "nfc.access.readWrite"
+        case .readOnly:
+            accessKey = "nfc.access.readOnly"
+        case .notSupported:
+            accessKey = "nfc.access.notSupported"
+        @unknown default:
+            accessKey = "nfc.access.unknown"
+        }
+
         DispatchQueue.main.async { [weak self] in
             self?.tagCapacity = capacity
-            switch status {
-            case .readWrite:
-                self?.tagAccessKey = "nfc.access.readWrite"
-            case .readOnly:
-                self?.tagAccessKey = "nfc.access.readOnly"
-            case .notSupported:
-                self?.tagAccessKey = "nfc.access.notSupported"
-            @unknown default:
-                self?.tagAccessKey = "nfc.access.unknown"
-            }
+            self?.tagAccessKey = accessKey
         }
     }
 
     private func fail(session: NFCNDEFReaderSession, error: Error) {
+        let description = error.localizedDescription
         DispatchQueue.main.async { [weak self] in
-            self?.lastError = error.localizedDescription
+            self?.lastError = description
             self?.statusKey = "nfc.status.failed"
         }
-        session.invalidate(errorMessage: error.localizedDescription)
+        session.invalidate(errorMessage: description)
     }
 
     private func fail(session: NFCNDEFReaderSession, messageKey: String) {
