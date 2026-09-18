@@ -44,7 +44,7 @@ enum NFCRecordContent {
             guard pieces.count == 2,
                   !pieces[0].isEmpty,
                   !pieces[1].isEmpty,
-                  pieces[1].contains(".") else {
+                  !address.contains(where: { $0.isWhitespace }) else {
                 return nil
             }
 
@@ -66,7 +66,8 @@ enum NFCRecordContent {
             let allowed = CharacterSet(charactersIn: "+*#0123456789,;")
             guard !compact.isEmpty,
                   compact.unicodeScalars.allSatisfy({ allowed.contains($0) }),
-                  compact.unicodeScalars.contains(where: CharacterSet.decimalDigits.contains) else {
+                  compact.unicodeScalars.contains(where: { CharacterSet.decimalDigits.contains($0) }),
+                  !compact.dropFirst().contains("+") else {
                 return nil
             }
 
