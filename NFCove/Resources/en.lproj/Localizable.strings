@@ -1,0 +1,81 @@
+"app.name" = "NFCove";
+"tab.home" = "Home";
+"tab.scan" = "Scan";
+"tab.create" = "Create";
+"tab.library" = "Library";
+"tab.settings" = "Settings";
+
+"home.hero.title" = "Your NFC workspace";
+"home.hero.subtitle" = "Read tags, build NDEF records, save reusable ideas, and grow into advanced NFC workflows.";
+"home.scan.title" = "Scan a tag";
+"home.scan.subtitle" = "Read and inspect NDEF content.";
+"home.create.title" = "Create & write";
+"home.create.subtitle" = "Build content and write it to a compatible tag.";
+"home.library.title" = "Library";
+"home.library.subtitle" = "Keep useful NFC records ready to reuse.";
+"home.roadmap.title" = "Built to grow";
+"home.roadmap.verify" = "Verify after write";
+"home.roadmap.batch" = "Batch writing";
+"home.roadmap.shortcuts" = "Shortcuts & App Intents";
+
+"scan.title" = "Scan";
+"scan.button" = "Start scan";
+"scan.results.empty.title" = "No tag scanned yet";
+"scan.results.empty.subtitle" = "Start a scan and hold your iPhone near an NDEF tag.";
+
+"create.title" = "Create";
+"create.type.section" = "Record type";
+"create.type.label" = "Type";
+"create.content.section" = "Content";
+"create.estimatedSize" = "Estimated NDEF size";
+"create.library.section" = "Library";
+"create.library.name.placeholder" = "Optional name";
+"create.library.save" = "Save to Library";
+"create.write.button" = "Write to NFC tag";
+"create.library.saved.title" = "Saved";
+"create.library.saved.message" = "This NFC item is now in your library.";
+"create.placeholder.text" = "Enter text";
+"create.placeholder.url" = "example.com";
+"create.placeholder.email" = "name@example.com";
+"create.placeholder.phone" = "+1 555 0100";
+
+"library.title" = "Library";
+"library.empty.title" = "Your library is empty";
+"library.empty.subtitle" = "Create an NFC record and save it here for quick reuse.";
+
+"settings.title" = "Settings";
+"settings.language.section" = "Language";
+"settings.language.picker" = "App language";
+"settings.about.section" = "About";
+"settings.about.version" = "Version";
+"settings.about.privacy" = "NFC data";
+"settings.about.localOnly" = "Processed locally";
+"settings.expert.section" = "Expert tools";
+"settings.expert.comingSoon" = "Advanced tag protocols are next on the roadmap";
+
+"language.system" = "System Language";
+"language.english" = "English";
+"language.spanish" = "Spanish";
+
+"record.text" = "Text";
+"record.url" = "URL";
+"record.email" = "Email";
+"record.phone" = "Phone";
+"record.custom" = "Custom NDEF";
+
+"nfc.status.ready" = "Ready";
+"nfc.status.scanning" = "Hold your iPhone near the NFC tag";
+"nfc.status.unavailable" = "NFC reading is not available on this device";
+"nfc.status.empty" = "The tag does not contain readable NDEF records";
+"nfc.status.readSuccess" = "Tag read successfully";
+"nfc.status.writeSuccess" = "Tag written successfully";
+"nfc.status.failed" = "The NFC operation could not be completed";
+"nfc.scan.prompt" = "Hold your iPhone near an NFC tag.";
+"nfc.write.prompt" = "Hold your iPhone near the NFC tag you want to write.";
+"nfc.write.success" = "NFCove wrote the tag successfully.";
+"nfc.error.multipleTags" = "More than one tag was detected. Present only one tag.";
+"nfc.error.readOnly" = "This NFC tag is read-only.";
+"nfc.error.notSupported" = "This tag does not support NDEF writing.";
+"nfc.error.tooLarge" = "The NDEF message is too large for this tag.";
+
+"common.ok" = "OK";
