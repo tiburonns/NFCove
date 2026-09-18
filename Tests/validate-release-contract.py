@@ -9,6 +9,8 @@ readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
 readme_es = (ROOT / "README.es.md").read_text(encoding="utf-8")
 strings_en = (ROOT / "NFCove/Resources/en.lproj/Localizable.strings").read_text(encoding="utf-8")
 strings_es = (ROOT / "NFCove/Resources/es.lproj/Localizable.strings").read_text(encoding="utf-8")
+testing_en = (ROOT / "docs/en/testing.md").read_text(encoding="utf-8")
+testing_es = (ROOT / "docs/es/testing.md").read_text(encoding="utf-8")
 
 versions = set(re.findall(r"MARKETING_VERSION = ([0-9.]+);", project))
 builds = set(re.findall(r"CURRENT_PROJECT_VERSION = ([0-9]+);", project))
@@ -22,6 +24,11 @@ if f"**Current development version:** {version} (build {build})." not in readme_
     raise SystemExit("version contract failed: English README is stale")
 if f"**Versión actual de desarrollo:** {version} (build {build})." not in readme_es:
     raise SystemExit("version contract failed: Spanish README is stale")
+
+if not testing_en.startswith(f"# NFCove {version} "):
+    raise SystemExit("version contract failed: English physical test plan is stale")
+if not testing_es.startswith(f"# NFCove {version} "):
+    raise SystemExit("version contract failed: Spanish physical test plan is stale")
 
 if f"This describes NFCove {version}." not in strings_en:
     raise SystemExit("version contract failed: English privacy copy is stale")
