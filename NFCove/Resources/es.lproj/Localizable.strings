@@ -90,3 +90,22 @@
 "nfc.error.verification" = "La escritura terminó, pero los datos leídos de nuevo no coinciden.";
 
 "common.ok" = "OK";
+
+"privacy.title" = "Privacidad";
+"privacy.summary.section" = "Cómo maneja NFCove tus datos";
+"privacy.summary.footer" = "Esto describe NFCove 0.2.0. Las futuras funciones en línea o de iCloud se documentarán antes de habilitarse.";
+"privacy.tracking.title" = "Sin rastreo";
+"privacy.tracking.detail" = "NFCove no te rastrea entre aplicaciones o sitios web.";
+"privacy.nfc.title" = "NFC permanece en tu dispositivo";
+"privacy.nfc.detail" = "El contenido de los tags se lee, crea y verifica localmente mediante Core NFC.";
+"privacy.storage.title" = "Preferencias locales";
+"privacy.storage.detail" = "Tu selección de idioma y la biblioteca actual se almacenan localmente para uso de NFCove.";
+"privacy.account.title" = "Sin cuenta obligatoria";
+"privacy.account.detail" = "Esta versión no requiere una cuenta de NFCove ni sube el contenido NFC a un servidor de NFCove.";
+"privacy.technical.section" = "Manifiesto de privacidad";
+"privacy.technical.tracking" = "Rastreo";
+"privacy.technical.collection" = "Recolección de datos";
+"privacy.technical.userdefaults" = "Preferencias de la app";
+"privacy.value.no" = "No";
+"privacy.value.none" = "Ninguna";
+"privacy.value.local" = "Sólo local";

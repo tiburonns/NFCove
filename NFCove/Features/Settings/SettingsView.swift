@@ -17,8 +17,13 @@ struct SettingsView: View {
 
                 Section("settings.about.section") {
                     LabeledContent("settings.about.version", value: "0.2.0")
-                    LabeledContent("settings.about.privacy") {
-                        Text("settings.about.localOnly")
+                    NavigationLink {
+                        PrivacyView()
+                    } label: {
+                        LabeledContent("settings.about.privacy") {
+                            Text("settings.about.localOnly")
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
 
