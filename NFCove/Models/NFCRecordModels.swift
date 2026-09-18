@@ -1,6 +1,6 @@
 import Foundation
 
-enum NFCRecordKind: String, CaseIterable, Codable, Identifiable {
+enum NFCRecordKind: String, CaseIterable, Codable, Identifiable, Sendable {
     case text
     case url
     case email
@@ -36,7 +36,7 @@ enum NFCRecordKind: String, CaseIterable, Codable, Identifiable {
     }
 }
 
-struct NFCRecordSnapshot: Identifiable, Hashable {
+struct NFCRecordSnapshot: Identifiable, Hashable, Sendable {
     let id = UUID()
     let kind: NFCRecordKind?
     let title: String
@@ -44,7 +44,7 @@ struct NFCRecordSnapshot: Identifiable, Hashable {
     let byteCount: Int
 }
 
-struct SavedNFCItem: Identifiable, Codable, Hashable {
+struct SavedNFCItem: Identifiable, Codable, Hashable, Sendable {
     let id: UUID
     var name: String
     var kind: NFCRecordKind
