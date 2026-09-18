@@ -3,6 +3,16 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject private var languageManager: LanguageManager
 
+    private var appVersion: String {
+        let version = Bundle.main.object(
+            forInfoDictionaryKey: "CFBundleShortVersionString"
+        ) as? String ?? "—"
+        let build = Bundle.main.object(
+            forInfoDictionaryKey: "CFBundleVersion"
+        ) as? String ?? "—"
+        return "\(version) (\(build))"
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -16,7 +26,7 @@ struct SettingsView: View {
                 }
 
                 Section("settings.about.section") {
-                    LabeledContent("settings.about.version", value: "0.2.0")
+                    LabeledContent("settings.about.version", value: appVersion)
                     NavigationLink {
                         PrivacyView()
                     } label: {
