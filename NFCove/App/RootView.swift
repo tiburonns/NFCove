@@ -37,5 +37,10 @@ struct RootView: View {
                 .tabItem { Label("tab.settings", systemImage: "gearshape") }
                 .tag(AppTab.settings)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            Color(uiColor: .systemBackground)
+                .ignoresSafeArea()
+        }
     }
 }
