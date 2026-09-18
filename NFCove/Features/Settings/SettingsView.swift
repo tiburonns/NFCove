@@ -16,8 +16,10 @@ struct SettingsView: View {
                 }
 
                 Section("settings.about.section") {
-                    LabeledContent("settings.about.version", value: "0.1.0")
-                    LabeledContent("settings.about.privacy", value: String(localized: "settings.about.localOnly"))
+                    LabeledContent("settings.about.version", value: "0.2.0")
+                    LabeledContent("settings.about.privacy") {
+                        Text("settings.about.localOnly")
+                    }
                 }
 
                 Section("settings.expert.section") {
