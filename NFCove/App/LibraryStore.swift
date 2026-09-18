@@ -109,10 +109,14 @@ final class LibraryStore: ObservableObject {
 
     private func persist(_ items: [SavedNFCItem]) throws {
         let data = try JSONEncoder().encode(items)
+        #if os(iOS)
         try data.write(
             to: storageURL,
             options: [.atomic, .completeFileProtection]
         )
+        #else
+        try data.write(to: storageURL, options: .atomic)
+        #endif
     }
 
     private func ensureStorageDirectory() throws {
