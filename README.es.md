@@ -46,7 +46,7 @@ NFCove/
 └── Resources/      Info.plist, entitlements y localización
 ```
 
-Consulta [docs/es/architecture.md](docs/es/architecture.md) para ver la arquitectura y el roadmap.
+Consulta [docs/es/architecture.md](docs/es/architecture.md) para ver la arquitectura y el roadmap, y [docs/es/ipa.md](docs/es/ipa.md) para compilar y firmar el IPA.
 
 ## Dirección del producto
 
