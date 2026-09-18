@@ -69,13 +69,24 @@
 "nfc.status.empty" = "The tag does not contain readable NDEF records";
 "nfc.status.readSuccess" = "Tag read successfully";
 "nfc.status.writeSuccess" = "Tag written successfully";
+"nfc.status.writeVerified" = "Tag written and verified";
+"nfc.status.writeUnverified" = "Tag written, but verification failed";
 "nfc.status.failed" = "The NFC operation could not be completed";
 "nfc.scan.prompt" = "Hold your iPhone near an NFC tag.";
 "nfc.write.prompt" = "Hold your iPhone near the NFC tag you want to write.";
 "nfc.write.success" = "NFCove wrote the tag successfully.";
+"nfc.write.verified" = "Written and verified successfully.";
+"nfc.write.unverified" = "The tag was written, but NFCove could not verify the result.";
+"nfc.read.success" = "Tag read successfully.";
+"nfc.read.empty" = "This tag is empty.";
+"nfc.access.readWrite" = "Read & write";
+"nfc.access.readOnly" = "Read only";
+"nfc.access.notSupported" = "NDEF unsupported";
+"nfc.access.unknown" = "Unknown access";
 "nfc.error.multipleTags" = "More than one tag was detected. Present only one tag.";
 "nfc.error.readOnly" = "This NFC tag is read-only.";
 "nfc.error.notSupported" = "This tag does not support NDEF writing.";
 "nfc.error.tooLarge" = "The NDEF message is too large for this tag.";
+"nfc.error.verification" = "The write completed, but the data read back from the tag did not match.";
 
 "common.ok" = "OK";
