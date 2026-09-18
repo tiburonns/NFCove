@@ -46,7 +46,7 @@ NFCove/
 └── Resources/      Info.plist, entitlements and localization
 ```
 
-See [docs/en/architecture.md](docs/en/architecture.md) for the architecture and roadmap.
+See [docs/en/architecture.md](docs/en/architecture.md) for the architecture and roadmap, and [docs/en/ipa.md](docs/en/ipa.md) for IPA builds and signing.
 
 ## Product direction
 
