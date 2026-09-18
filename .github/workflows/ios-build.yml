@@ -1,0 +1,94 @@
+name: iOS Build and IPA
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build NFCove
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    env:
+      IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
+      IOS_P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
+      IOS_PROFILE_BASE64: ${{ secrets.IOS_PROFILE_BASE64 }}
+      IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+      IOS_BUNDLE_ID: ${{ secrets.IOS_BUNDLE_ID }}
+      IOS_EXPORT_METHOD: ${{ secrets.IOS_EXPORT_METHOD }}
+      IOS_SIGNING_IDENTITY: ${{ secrets.IOS_SIGNING_IDENTITY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Xcode version
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Validate project
+        run: |
+          xcodebuild -project NFCove.xcodeproj -list
+          plutil -lint NFCove/Resources/Info.plist
+          plutil -lint NFCove/Resources/NFCove.entitlements
+
+      - name: Build simulator
+        run: |
+          xcodebuild             -project NFCove.xcodeproj             -scheme NFCove             -configuration Debug             -destination "generic/platform=iOS Simulator"             CODE_SIGNING_ALLOWED=NO             build
+
+      - name: Build unsigned IPA
+        run: |
+          chmod +x scripts/build-unsigned-ipa.sh
+          scripts/build-unsigned-ipa.sh
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: NFCove-unsigned
+          path: build/NFCove-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Build signed IPA when signing secrets are configured
+        shell: bash
+        run: |
+          if [[ -z "$IOS_P12_BASE64" || -z "$IOS_PROFILE_BASE64" || -z "$IOS_P12_PASSWORD" ]]; then
+            echo "Apple signing secrets are not configured. Unsigned IPA is still available."
+            exit 0
+          fi
+
+          P12_PATH="$RUNNER_TEMP/nfcove-signing.p12"
+          PROFILE_PATH="$RUNNER_TEMP/nfcove.mobileprovision"
+
+          echo "$IOS_P12_BASE64" | base64 --decode > "$P12_PATH"
+          echo "$IOS_PROFILE_BASE64" | base64 --decode > "$PROFILE_PATH"
+
+          export P12_PATH
+          export PROVISIONING_PROFILE_PATH="$PROFILE_PATH"
+          export P12_PASSWORD="$IOS_P12_PASSWORD"
+          export KEYCHAIN_PASSWORD="${IOS_KEYCHAIN_PASSWORD:-nfcove-ci-keychain}"
+          export BUNDLE_ID="${IOS_BUNDLE_ID:-com.tiburonns.NFCove}"
+          export EXPORT_METHOD="${IOS_EXPORT_METHOD:-development}"
+          export SIGNING_IDENTITY="${IOS_SIGNING_IDENTITY:-Apple Development}"
+
+          chmod +x scripts/build-signed-ipa.sh
+          scripts/build-signed-ipa.sh
+
+      - name: Upload signed IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: NFCove-signed
+          path: build/NFCove.ipa
+          if-no-files-found: ignore
+          retention-days: 30
