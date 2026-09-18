@@ -22,6 +22,25 @@ struct ScanView: View {
                     .font(.headline)
                     .multilineTextAlignment(.center)
 
+                if manager.tagCapacity != nil || manager.tagAccessKey != nil {
+                    HStack(spacing: 10) {
+                        if let accessKey = manager.tagAccessKey {
+                            Label {
+                                Text(LocalizedStringKey(accessKey))
+                            } icon: {
+                                Image(systemName: "lock.open.display")
+                            }
+                        }
+
+                        if let capacity = manager.tagCapacity {
+                            Label("\(capacity) B", systemImage: "externaldrive")
+                                .monospacedDigit()
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
+
                 if let error = manager.lastError {
                     Text(error)
                         .font(.footnote)
