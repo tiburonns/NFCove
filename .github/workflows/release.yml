@@ -1,0 +1,106 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    timeout-minutes: 35
+    env:
+      IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
+      IOS_P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
+      IOS_PROFILE_BASE64: ${{ secrets.IOS_PROFILE_BASE64 }}
+      IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+      IOS_BUNDLE_ID: ${{ secrets.IOS_BUNDLE_ID }}
+      IOS_EXPORT_METHOD: ${{ secrets.IOS_EXPORT_METHOD }}
+      IOS_SIGNING_IDENTITY: ${{ secrets.IOS_SIGNING_IDENTITY }}
+
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+
+      - name: Run core logic tests
+        run: zsh Tests/run-core-tests.sh
+
+      - name: Build unsigned IPA
+        run: |
+          chmod +x scripts/build-unsigned-ipa.sh
+          scripts/build-unsigned-ipa.sh
+
+      - name: Validate release tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          IPA_PATH="build/NFCove-unsigned.ipa"
+          test -f "$IPA_PATH"
+          VERSION="$(python3 - "$IPA_PATH" <<'PY'
+          import plistlib
+          import sys
+          import zipfile
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              info_path = next(
+                  name for name in archive.namelist()
+                  if name.startswith("Payload/") and name.endswith(".app/Info.plist")
+              )
+              info = plistlib.loads(archive.read(info_path))
+          print(info["CFBundleShortVersionString"])
+          PY
+          )"
+          if [[ "v$VERSION" != "$GITHUB_REF_NAME" ]]; then
+            echo "Tag $GITHUB_REF_NAME does not match NFCove version $VERSION" >&2
+            exit 1
+          fi
+          echo "APP_VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Build signed IPA when signing secrets are configured
+        shell: bash
+        run: |
+          if [[ -z "$IOS_P12_BASE64" || -z "$IOS_PROFILE_BASE64" || -z "$IOS_P12_PASSWORD" ]]; then
+            echo "Signing secrets are not configured; publishing unsigned IPA only."
+            exit 0
+          fi
+
+          P12_PATH="$RUNNER_TEMP/nfcove-signing.p12"
+          PROFILE_PATH="$RUNNER_TEMP/nfcove.mobileprovision"
+          echo "$IOS_P12_BASE64" | base64 --decode > "$P12_PATH"
+          echo "$IOS_PROFILE_BASE64" | base64 --decode > "$PROFILE_PATH"
+
+          export P12_PATH
+          export PROVISIONING_PROFILE_PATH="$PROFILE_PATH"
+          export P12_PASSWORD="$IOS_P12_PASSWORD"
+          export KEYCHAIN_PASSWORD="${IOS_KEYCHAIN_PASSWORD:-nfcove-release-keychain}"
+          export BUNDLE_ID="${IOS_BUNDLE_ID:-com.tiburonns.NFCove}"
+          export EXPORT_METHOD="${IOS_EXPORT_METHOD:-development}"
+          export SIGNING_IDENTITY="${IOS_SIGNING_IDENTITY:-Apple Development}"
+
+          chmod +x scripts/build-signed-ipa.sh
+          scripts/build-signed-ipa.sh
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          ASSETS=("build/NFCove-unsigned.ipa")
+          if [[ -f "build/NFCove.ipa" ]]; then
+            ASSETS+=("build/NFCove.ipa")
+          fi
+
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "${ASSETS[@]}" --clobber
+          else
+            gh release create \
+              "$GITHUB_REF_NAME" \
+              "${ASSETS[@]}" \
+              --title "NFCove $APP_VERSION" \
+              --generate-notes
+          fi
