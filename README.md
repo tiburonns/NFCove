@@ -1,1 +1,61 @@
 # NFCove
+
+**Read. Build. Automate.**
+
+NFCove is a modern, native NFC toolkit for iPhone. The project starts with the essentials—reading and writing NDEF records—and is designed to grow into a visual NFC library, automation builder, tag inspector, batch writer, verifier, and advanced developer toolkit.
+
+> Documentation: **English** · [Español](README.es.md)
+
+## Current foundation
+
+- Native SwiftUI interface
+- Core NFC NDEF reader
+- NDEF writer for Text, URL, Email, and Phone records
+- Human-readable payload parser
+- Local library for saved NFC items
+- English, Spanish, and System Language modes
+- Architecture prepared for templates, history, verification, batch writing, App Intents, iCloud sync, and expert tag protocols
+- No third-party runtime dependencies
+
+## Requirements
+
+- Xcode 16 or newer
+- iOS 18 or newer
+- A physical NFC-capable iPhone for NFC operations
+- An Apple Developer signing setup with the **Near Field Communication Tag Reading** capability enabled
+
+Core NFC sessions do not run in the iOS Simulator.
+
+## Run
+
+1. Clone the repository.
+2. Open `NFCove.xcodeproj` in Xcode.
+3. Select the `NFCove` target.
+4. Choose your development team under **Signing & Capabilities**.
+5. Ensure the NFC capability is available for the selected App ID.
+6. Build and run on a physical iPhone.
+
+## Project structure
+
+```text
+NFCove/
+├── App/            App entry point, navigation, language and shared stores
+├── Core/NFC/       Core NFC session and NDEF encoding logic
+├── Features/       Home, Scan, Create, Library and Settings
+├── Models/         Shared app and NFC models
+└── Resources/      Info.plist, entitlements and localization
+```
+
+See [docs/en/architecture.md](docs/en/architecture.md) for the architecture and roadmap.
+
+## Product direction
+
+NFCove is intentionally not a visual clone of existing NFC utilities. The goal is to make NFC workflows feel like a first-class Apple platform experience: visual records, reusable templates, clear compatibility feedback, safe write verification, organized tag libraries, and deep Shortcuts integration.
+
+## Privacy
+
+NFC reads and writes happen locally through Apple's Core NFC framework. The current foundation does not require an account and does not send NFC contents to a server.
+
+## Status
+
+Early foundation / active development.
