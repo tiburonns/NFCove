@@ -42,6 +42,7 @@
 "library.title" = "Biblioteca";
 "library.empty.title" = "Tu biblioteca está vacía";
 "library.empty.subtitle" = "Crea un record NFC y guárdalo aquí para reutilizarlo rápidamente.";
+"library.write" = "Escribir en tag";
 
 "settings.title" = "Ajustes";
 "settings.language.section" = "Idioma";
