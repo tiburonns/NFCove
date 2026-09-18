@@ -24,8 +24,7 @@ enum NDEFBuilder {
     }
 
     static func estimatedSize(for kind: NFCRecordKind, value: String) -> Int {
-        guard let payload = payload(for: kind, value: value) else { return 0 }
-        return payload.payload.count + payload.type.count + payload.identifier.count + 6
+        message(for: kind, value: value)?.length ?? 0
     }
 
     private static func normalizedURL(_ value: String) -> String {
