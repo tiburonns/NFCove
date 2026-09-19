@@ -18,6 +18,7 @@ struct NFCoveCoreLogicIntegration {
         try testContentNormalization()
         try testLibraryPersistence()
         try testLegacyMigration()
+        try testCorruptLegacyMigrationPreservesBytes()
         try testCorruptStorePreservation()
         try testInvalidStoredRecordIsQuarantined()
         try testRepeatedCorruptionCreatesUniqueBackups()
@@ -168,6 +169,47 @@ struct NFCoveCoreLogicIntegration {
         try require(store.items == legacy, "Legacy library was not migrated")
         try require(defaults.data(forKey: "nfcove.library.items") == nil, "Legacy key was not removed after migration")
         try require(FileManager.default.fileExists(atPath: url.path), "Migrated library file was not created")
+    }
+
+    @MainActor
+    private static func testCorruptLegacyMigrationPreservesBytes() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("NFCoveLegacyCorrupt-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let url = root.appendingPathComponent("library.json")
+        let suiteName = "NFCoveLegacyCorrupt.\(UUID().uuidString)"
+        guard let defaults = UserDefaults(suiteName: suiteName) else {
+            throw TestFailure.failed("Could not create isolated UserDefaults suite")
+        }
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let legacyBytes = Data("invalid-legacy-json".utf8)
+        defaults.set(legacyBytes, forKey: "nfcove.library.items")
+
+        let store = LibraryStore(
+            preferences: defaults,
+            storageURL: url
+        )
+
+        try require(store.items.isEmpty, "Corrupt legacy migration produced active items")
+        try require(store.persistenceError != nil, "Corrupt legacy migration did not surface an error")
+        try require(
+            defaults.data(forKey: "nfcove.library.items") == legacyBytes,
+            "Corrupt legacy source was deleted before successful recovery"
+        )
+
+        let backups = try FileManager.default.contentsOfDirectory(
+            at: root,
+            includingPropertiesForKeys: nil
+        ).filter {
+            $0.lastPathComponent.contains(".legacy-corrupt-")
+        }
+        try require(backups.count == 1, "Corrupt legacy bytes were not preserved exactly once")
+        try require(
+            try Data(contentsOf: backups[0]) == legacyBytes,
+            "Corrupt legacy recovery file changed the original bytes"
+        )
     }
 
     @MainActor
