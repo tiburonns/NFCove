@@ -19,7 +19,9 @@ struct NFCoveCoreLogicIntegration {
         try testLibraryPersistence()
         try testLegacyMigration()
         try testCorruptStorePreservation()
-        print("PASS: NFC normalization, library persistence, migration, and corrupt-store preservation")
+        try testInvalidStoredRecordIsQuarantined()
+        try testRepeatedCorruptionCreatesUniqueBackups()
+        print("PASS: NFC normalization, library persistence, migration, validation, and corrupt-store preservation")
     }
 
     private static func require(
