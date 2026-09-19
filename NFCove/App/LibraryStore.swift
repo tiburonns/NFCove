@@ -1,6 +1,17 @@
 import Combine
 import Foundation
 
+enum LibraryStoreError: LocalizedError {
+    case invalidStoredItem(UUID)
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidStoredItem(let id):
+            return "The saved NFC library contains an invalid record (\(id.uuidString))."
+        }
+    }
+}
+
 @MainActor
 final class LibraryStore: ObservableObject {
     @Published private(set) var items: [SavedNFCItem] = []
@@ -68,9 +79,15 @@ final class LibraryStore: ObservableObject {
 
             if fileManager.fileExists(atPath: storageURL.path) {
                 let data = try Data(contentsOf: storageURL)
-                items = try JSONDecoder()
+                let decoded = try JSONDecoder()
                     .decode([SavedNFCItem].self, from: data)
-                    .sorted { $0.createdAt > $1.createdAt }
+                let validated = try validatedItems(decoded)
+                items = validated.sorted { $0.createdAt > $1.createdAt }
+
+                if validated != decoded {
+                    try persist(validated)
+                }
+
                 persistenceError = nil
                 return
             }
@@ -90,11 +107,34 @@ final class LibraryStore: ObservableObject {
         }
 
         let decoded = try JSONDecoder().decode([SavedNFCItem].self, from: data)
-        items = decoded.sorted { $0.createdAt > $1.createdAt }
+        let validated = try validatedItems(decoded)
+        items = validated.sorted { $0.createdAt > $1.createdAt }
 
         try persist(items)
         preferences.removeObject(forKey: Self.legacyStorageKey)
         persistenceError = nil
+    }
+
+    private func validatedItems(
+        _ decoded: [SavedNFCItem]
+    ) throws -> [SavedNFCItem] {
+        try decoded.map { original in
+            guard let normalized = NFCRecordContent.normalizedValue(
+                for: original.kind,
+                value: original.value
+            ) else {
+                throw LibraryStoreError.invalidStoredItem(original.id)
+            }
+
+            var item = original
+            item.value = normalized
+
+            let cleanedName = item.name.trimmingCharacters(
+                in: .whitespacesAndNewlines
+            )
+            item.name = cleanedName.isEmpty ? normalized : cleanedName
+            return item
+        }
     }
 
     private func save() {
@@ -131,7 +171,7 @@ final class LibraryStore: ObservableObject {
 
         let backup = storageURL
             .deletingPathExtension()
-            .appendingPathExtension("corrupt-(UUID().uuidString).json")
+            .appendingPathExtension("corrupt-\(UUID().uuidString).json")
 
         try? fileManager.moveItem(at: storageURL, to: backup)
     }
