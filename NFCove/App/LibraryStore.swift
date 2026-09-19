@@ -106,13 +106,39 @@ final class LibraryStore: ObservableObject {
             return
         }
 
-        let decoded = try JSONDecoder().decode([SavedNFCItem].self, from: data)
-        let validated = try validatedItems(decoded)
-        items = validated.sorted { $0.createdAt > $1.createdAt }
+        do {
+            let decoded = try JSONDecoder().decode(
+                [SavedNFCItem].self,
+                from: data
+            )
+            let validated = try validatedItems(decoded)
+            items = validated.sorted { $0.createdAt > $1.createdAt }
 
-        try persist(items)
-        preferences.removeObject(forKey: Self.legacyStorageKey)
-        persistenceError = nil
+            try persist(items)
+            preferences.removeObject(forKey: Self.legacyStorageKey)
+            persistenceError = nil
+        } catch {
+            try preserveLegacyCorruptData(data)
+            throw error
+        }
+    }
+
+    private func preserveLegacyCorruptData(_ data: Data) throws {
+        try ensureStorageDirectory()
+        let backup = storageURL
+            .deletingPathExtension()
+            .appendingPathExtension(
+                "legacy-corrupt-\(UUID().uuidString).json"
+            )
+
+        #if os(iOS)
+        try data.write(
+            to: backup,
+            options: [.atomic, .completeFileProtection]
+        )
+        #else
+        try data.write(to: backup, options: .atomic)
+        #endif
     }
 
     private func validatedItems(
