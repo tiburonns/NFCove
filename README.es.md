@@ -6,17 +6,17 @@ NFCove es una herramienta NFC moderna y nativa para iPhone. El proyecto comienza
 
 > Documentación: [English](README.md) · **Español**
 
-> **Versión actual de desarrollo:** 0.2.1 (build 3). Las releases por tag se generan con la misma ruta de IPA probada por CI.
+> **Versión actual de desarrollo:** 0.2.2 (build 4). Las releases por tag se generan con la misma ruta de IPA probada por CI.
 
 ## Base actual
 
 - Interfaz nativa en SwiftUI
 - Lector NDEF con Core NFC
-- Escritura NDEF para Texto, URL, Email y Teléfono
+- Escritura NDEF para Texto, URL, Email, Teléfono, SMS y Ubicación
 - Parser de payloads legible para humanos
 - Biblioteca local guardada de forma atómica en Application Support, con migración desde el formato anterior basado en preferencias
 - Los elementos guardados pueden volver a escribirse directamente en un tag compatible
-- URL, email y teléfono se normalizan y validan antes de crear el mensaje NDEF
+- URL, email, teléfono, SMS y ubicación se normalizan y validan antes de crear el mensaje NDEF
 - Verificación mediante relectura después de escribir en tags NDEF compatibles
 - Pruebas portables de lógica en CI para normalización, persistencia, migración y preservación de archivos corruptos
 - Modos Inglés, Español e Idioma del sistema
