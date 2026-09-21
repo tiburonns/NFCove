@@ -1,4 +1,4 @@
-# NFCove 0.2.1 — Plan de aceptación en dispositivo físico
+# NFCove 0.2.2 — Plan de aceptación en dispositivo físico
 
 **Español** · [English](../en/testing.md)
 
@@ -21,13 +21,13 @@ Resultado esperado: sin crash, sin interfaz encerrada en un cuadro, sin claves d
 
 ## Matriz de lectura
 
-Usa tags NDEF conocidos con Texto, URL HTTPS, email `mailto:`, teléfono `tel:`, varios records NDEF, mensaje NDEF vacío y un payload no clasificado.
+Usa tags NDEF conocidos con Texto, URL HTTPS, email `mailto:`, teléfono `tel:`, mensaje `sms:`, ubicación `geo:`, varios records NDEF, mensaje NDEF vacío y un payload no clasificado.
 
 En cada tag inicia el escaneo, presenta un solo tag, confirma la hoja nativa de NFC, revisa capacidad/acceso cuando Core NFC lo proporcione y verifica que el contenido reconocido sea legible. El contenido NDEF desconocido debe poder inspeccionarse sin cerrar la app.
 
 ## Escritura y verificación por relectura
 
-Para Texto, URL, Email y Teléfono: introduce un valor válido, confirma tamaño mayor que cero, escribe en un tag con capacidad suficiente, mantenlo cerca durante la verificación, confirma **escrito y verificado** y vuelve a escanearlo.
+Para Texto, URL, Email, Teléfono, SMS y Ubicación: introduce un valor válido, confirma tamaño mayor que cero, escribe en un tag con capacidad suficiente, mantenlo cerca durante la verificación, confirma **escrito y verificado** y vuelve a escanearlo.
 
 Comprueba además que `example.com` se convierta en `https://example.com`, los teléfonos formateados se normalicen, el email se convierta en `mailto:`, las entradas inválidas no puedan escribirse, los mensajes demasiado grandes se rechacen, los tags de sólo lectura se rechacen y alejar el tag antes de verificar nunca produzca éxito verificado.
 
@@ -58,4 +58,4 @@ Una IPA que se instala pero no puede abrir una sesión Core NFC **no** pasa acep
 
 ## Resultado
 
-El candidato pasa únicamente cuando los cuatro tipos soportados leen/escriben/verifican, los casos inválidos/capacidad/sólo lectura/varios tags fallan de forma segura, Biblioteca y migración conservan datos, los tres modos de idioma funcionan y la ruta de IPA conserva la capacidad NFC.
+El candidato pasa únicamente cuando los seis tipos soportados leen/escriben/verifican, los casos inválidos/capacidad/sólo lectura/varios tags fallan de forma segura, Biblioteca y migración conservan datos, los tres modos de idioma funcionan y la ruta de IPA conserva la capacidad NFC.
