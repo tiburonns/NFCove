@@ -38,6 +38,8 @@
 "create.placeholder.url" = "ejemplo.com";
 "create.placeholder.email" = "nombre@ejemplo.com";
 "create.placeholder.phone" = "+52 81 0000 0000";
+"create.placeholder.sms" = "+52 81 0000 0000";
+"create.placeholder.location" = "25.6866, -100.3161";
 
 "library.title" = "Biblioteca";
 "library.empty.title" = "Tu biblioteca está vacía";
@@ -62,6 +64,8 @@
 "record.url" = "URL";
 "record.email" = "Email";
 "record.phone" = "Teléfono";
+"record.sms" = "SMS";
+"record.location" = "Ubicación";
 "record.custom" = "NDEF personalizado";
 
 "nfc.status.ready" = "Listo";
@@ -94,7 +98,7 @@
 
 "privacy.title" = "Privacidad";
 "privacy.summary.section" = "Cómo maneja NFCove tus datos";
-"privacy.summary.footer" = "Esto describe NFCove 0.2.0. Las futuras funciones en línea o de iCloud se documentarán antes de habilitarse.";
+"privacy.summary.footer" = "Esto describe NFCove 0.2.1. Las futuras funciones en línea o de iCloud se documentarán antes de habilitarse.";
 "privacy.tracking.title" = "Sin rastreo";
 "privacy.tracking.detail" = "NFCove no te rastrea entre aplicaciones o sitios web.";
 "privacy.nfc.title" = "NFC permanece en tu dispositivo";
