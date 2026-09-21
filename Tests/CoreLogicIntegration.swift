@@ -90,6 +90,38 @@ struct NFCoveCoreLogicIntegration {
             ) == nil,
             "Invalid phone number was accepted"
         )
+
+        try require(
+            NFCRecordContent.normalizedValue(
+                for: .sms,
+                value: "+52 (81) 1234-5678"
+            ) == "sms:+528112345678",
+            "SMS normalization failed"
+        )
+
+        try require(
+            NFCRecordContent.normalizedValue(
+                for: .location,
+                value: "25.6866, -100.3161"
+            ) == "geo:25.6866,-100.3161",
+            "Location normalization failed"
+        )
+
+        try require(
+            NFCRecordContent.normalizedValue(
+                for: .location,
+                value: "95.0, -100.0"
+            ) == nil,
+            "Out-of-range latitude was accepted"
+        )
+
+        try require(
+            NFCRecordContent.normalizedValue(
+                for: .location,
+                value: "25.0, -181.0"
+            ) == nil,
+            "Out-of-range longitude was accepted"
+        )
     }
 
     @MainActor
