@@ -1,4 +1,4 @@
-# NFCove 0.2.1 — Physical Device Acceptance Plan
+# NFCove 0.2.2 — Physical Device Acceptance Plan
 
 [Español](../es/testing.md) · **English**
 
@@ -21,13 +21,13 @@ Expected: no launch crash, no square/constrained root UI, no localization keys e
 
 ## Read matrix
 
-Use known-good NDEF tags containing Text, HTTPS URL, `mailto:` email, `tel:` phone, multiple NDEF records, an empty NDEF message, and an unclassified NDEF payload.
+Use known-good NDEF tags containing Text, HTTPS URL, `mailto:` email, `tel:` phone, `sms:` message, `geo:` location, multiple NDEF records, an empty NDEF message, and an unclassified NDEF payload.
 
 For every tag: start a scan, present one tag, confirm the native NFC sheet appears, confirm capacity/access when Core NFC exposes it, and verify recognized content is human-readable. Unknown NDEF content must remain inspectable instead of crashing.
 
 ## Write and read-back verification
 
-For Text, URL, Email, and Phone: enter a valid value, confirm non-zero estimated size, write to a writable tag with enough capacity, keep the tag in range through verification, confirm **written and verified**, then scan it again and compare the visible value.
+For Text, URL, Email, Phone, SMS, and Location: enter a valid value, confirm non-zero estimated size, write to a writable tag with enough capacity, keep the tag in range through verification, confirm **written and verified**, then scan it again and compare the visible value.
 
 Also verify that `example.com` becomes `https://example.com`, formatted phone numbers normalize correctly, email becomes `mailto:`, malformed input cannot be written, oversized messages are rejected, read-only tags are rejected, and removing the tag before verification never produces verified success.
 
@@ -58,4 +58,4 @@ An IPA that installs but cannot open a Core NFC session does **not** pass releas
 
 ## Acceptance result
 
-A candidate passes only when all four supported record kinds read/write/verify, invalid/capacity/read-only/multiple-tag cases fail safely, the library and legacy migration preserve data, all three language modes behave correctly, and the intended IPA path retains NFC capability.
+A candidate passes only when all six supported record kinds read/write/verify, invalid/capacity/read-only/multiple-tag cases fail safely, the library and legacy migration preserve data, all three language modes behave correctly, and the intended IPA path retains NFC capability.
