@@ -38,6 +38,8 @@
 "create.placeholder.url" = "example.com";
 "create.placeholder.email" = "name@example.com";
 "create.placeholder.phone" = "+1 555 0100";
+"create.placeholder.sms" = "+1 555 0100";
+"create.placeholder.location" = "25.6866, -100.3161";
 
 "library.title" = "Library";
 "library.empty.title" = "Your library is empty";
@@ -62,6 +64,8 @@
 "record.url" = "URL";
 "record.email" = "Email";
 "record.phone" = "Phone";
+"record.sms" = "SMS";
+"record.location" = "Location";
 "record.custom" = "Custom NDEF";
 
 "nfc.status.ready" = "Ready";
