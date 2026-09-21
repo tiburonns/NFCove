@@ -297,13 +297,17 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
                 kind = .email
             } else if value.hasPrefix("tel:") {
                 kind = .phone
+            } else if value.hasPrefix("sms:") {
+                kind = .sms
+            } else if value.hasPrefix("geo:") {
+                kind = .location
             } else {
                 kind = .url
             }
 
             return NFCRecordSnapshot(
                 kind: kind,
-                title: kind.rawValue.capitalized,
+                title: AppLocalization.string(kind.localizationKey),
                 value: value,
                 byteCount: payload.payload.count
             )
@@ -313,7 +317,7 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
         if let text {
             return NFCRecordSnapshot(
                 kind: .text,
-                title: "Text",
+                title: AppLocalization.string(NFCRecordKind.text.localizationKey),
                 value: text,
                 byteCount: payload.payload.count
             )
