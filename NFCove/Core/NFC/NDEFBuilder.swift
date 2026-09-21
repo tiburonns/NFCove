@@ -21,7 +21,7 @@ enum NDEFBuilder {
                 string: normalized,
                 locale: .current
             )
-        case .url, .email, .phone:
+        case .url, .email, .phone, .sms, .location:
             return NFCNDEFPayload.wellKnownTypeURIPayload(string: normalized)
         }
     }
