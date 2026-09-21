@@ -54,25 +54,88 @@ enum NFCRecordContent {
             return components.url?.absoluteString
 
         case .phone:
-            let raw = trimmed
-                .replacingOccurrences(of: "tel:", with: "", options: [.anchored, .caseInsensitive])
+            guard let compact = normalizedDialString(
+                trimmed,
+                removingScheme: "tel:"
+            ) else {
+                return nil
+            }
+            return "tel:\(compact)"
 
-            let formatting = CharacterSet(charactersIn: " ()-.")
-            let compact = raw.unicodeScalars
-                .filter { !formatting.contains($0) }
-                .map(String.init)
-                .joined()
+        case .sms:
+            guard let compact = normalizedDialString(
+                trimmed,
+                removingScheme: "sms:"
+            ) else {
+                return nil
+            }
+            return "sms:\(compact)"
 
-            let allowed = CharacterSet(charactersIn: "+*#0123456789,;")
-            guard !compact.isEmpty,
-                  compact.unicodeScalars.allSatisfy({ allowed.contains($0) }),
-                  compact.unicodeScalars.contains(where: { CharacterSet.decimalDigits.contains($0) }),
-                  !compact.dropFirst().contains("+") else {
+        case .location:
+            let raw = trimmed.replacingOccurrences(
+                of: "geo:",
+                with: "",
+                options: [.anchored, .caseInsensitive]
+            )
+            let pieces = raw.split(
+                separator: ",",
+                maxSplits: 1,
+                omittingEmptySubsequences: false
+            )
+            guard pieces.count == 2,
+                  let latitude = Double(
+                    pieces[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                  ),
+                  let longitude = Double(
+                    pieces[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                  ),
+                  (-90...90).contains(latitude),
+                  (-180...180).contains(longitude) else {
                 return nil
             }
 
-            return "tel:\(compact)"
+            return "geo:\(coordinateString(latitude)),\(coordinateString(longitude))"
         }
+    }
+
+    private static func normalizedDialString(
+        _ value: String,
+        removingScheme scheme: String
+    ) -> String? {
+        let raw = value.replacingOccurrences(
+            of: scheme,
+            with: "",
+            options: [.anchored, .caseInsensitive]
+        )
+        let formatting = CharacterSet(charactersIn: " ()-.")
+        let compact = raw.unicodeScalars
+            .filter { !formatting.contains($0) }
+            .map(String.init)
+            .joined()
+
+        let allowed = CharacterSet(charactersIn: "+*#0123456789,;")
+        guard !compact.isEmpty,
+              compact.unicodeScalars.allSatisfy({ allowed.contains($0) }),
+              compact.unicodeScalars.contains(where: {
+                  CharacterSet.decimalDigits.contains($0)
+              }),
+              !compact.dropFirst().contains("+") else {
+            return nil
+        }
+
+        return compact
+    }
+
+    private static func coordinateString(_ value: Double) -> String {
+        var result = String(format: "%.6f", value)
+        while result.contains(".") && result.last == "0" {
+            result.removeLast()
+        }
+        if result.last == "." {
+            result.removeLast()
+        }
+        return result
+    }
     }
 }
 
@@ -81,6 +144,8 @@ enum NFCRecordKind: String, CaseIterable, Codable, Identifiable, Sendable {
     case url
     case email
     case phone
+    case sms
+    case location
 
     var id: String { rawValue }
 
@@ -90,6 +155,8 @@ enum NFCRecordKind: String, CaseIterable, Codable, Identifiable, Sendable {
         case .url: return "link"
         case .email: return "envelope"
         case .phone: return "phone"
+        case .sms: return "message"
+        case .location: return "location"
         }
     }
 
@@ -99,6 +166,8 @@ enum NFCRecordKind: String, CaseIterable, Codable, Identifiable, Sendable {
         case .url: return "record.url"
         case .email: return "record.email"
         case .phone: return "record.phone"
+        case .sms: return "record.sms"
+        case .location: return "record.location"
         }
     }
 
@@ -108,6 +177,8 @@ enum NFCRecordKind: String, CaseIterable, Codable, Identifiable, Sendable {
         case .url: return "create.placeholder.url"
         case .email: return "create.placeholder.email"
         case .phone: return "create.placeholder.phone"
+        case .sms: return "create.placeholder.sms"
+        case .location: return "create.placeholder.location"
         }
     }
 }
