@@ -39,8 +39,10 @@ with (ROOT / "NFCove/Resources/NFCove.entitlements").open("rb") as handle:
     entitlements = plistlib.load(handle)
 
 formats = entitlements.get("com.apple.developer.nfc.readersession.formats", [])
-if "NDEF" not in formats:
-    raise SystemExit("capability contract failed: NDEF reader entitlement is missing")
+if "TAG" not in formats:
+    raise SystemExit("capability contract failed: current TAG reader entitlement is missing")
+if "NDEF" in formats:
+    raise SystemExit("capability contract failed: deprecated NDEF entitlement must not be shipped")
 
 with (ROOT / "NFCove/Resources/PrivacyInfo.xcprivacy").open("rb") as handle:
     privacy = plistlib.load(handle)
