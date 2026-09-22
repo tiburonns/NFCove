@@ -127,7 +127,11 @@ enum NFCRecordContent {
     }
 
     private static func coordinateString(_ value: Double) -> String {
-        var result = String(format: "%.6f", value)
+        var result = String(
+            format: "%.6f",
+            locale: Locale(identifier: "en_US_POSIX"),
+            value
+        )
         while result.contains(".") && result.last == "0" {
             result.removeLast()
         }
@@ -135,7 +139,6 @@ enum NFCRecordContent {
             result.removeLast()
         }
         return result
-    }
     }
 }
 
