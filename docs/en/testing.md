@@ -1,4 +1,4 @@
-# NFCove 0.2.2 — Physical Device Acceptance Plan
+# NFCove 0.2.3 — Physical Device Acceptance Plan
 
 [Español](../es/testing.md) · **English**
 
@@ -12,7 +12,7 @@ Do not publish a release tag until every applicable test below passes on the exa
 
 1. Clone `main` and open `NFCove.xcodeproj`.
 2. Select a valid Apple Development team and a physical NFC-capable iPhone.
-3. Confirm **Near Field Communication Tag Reading** is enabled for the App ID.
+3. Confirm **Near Field Communication Tag Reading** is enabled for the App ID and the built app entitlement contains `TAG` (not deprecated `NDEF`).
 4. Build and launch.
 5. Confirm Home, Scan, Create, Library, and Settings fill the available screen in portrait and landscape.
 6. Test **System Language**, **English**, and **Español**, relaunching after each selection.

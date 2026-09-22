@@ -26,6 +26,10 @@
     <false/>
     <key>NFCReaderUsageDescription</key>
     <string>NFCove uses NFC to read, inspect, and write compatible NFC tags you choose to scan.</string>
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>nfc</string>
+    </array>
     <key>UIApplicationSceneManifest</key>
     <dict>
         <key>UIApplicationSupportsMultipleScenes</key>
