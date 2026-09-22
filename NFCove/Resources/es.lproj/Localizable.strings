@@ -98,7 +98,7 @@
 
 "privacy.title" = "Privacidad";
 "privacy.summary.section" = "Cómo maneja NFCove tus datos";
-"privacy.summary.footer" = "Esto describe NFCove 0.2.2. Las futuras funciones en línea o de iCloud se documentarán antes de habilitarse.";
+"privacy.summary.footer" = "Esto describe NFCove 0.2.3. Las futuras funciones en línea o de iCloud se documentarán antes de habilitarse.";
 "privacy.tracking.title" = "Sin rastreo";
 "privacy.tracking.detail" = "NFCove no te rastrea entre aplicaciones o sitios web.";
 "privacy.nfc.title" = "NFC permanece en tu dispositivo";
