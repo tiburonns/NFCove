@@ -51,9 +51,16 @@ jobs:
       - name: Run core logic tests
         run: zsh Tests/run-core-tests.sh
 
-      - name: Build simulator
+      - name: Build Release for iOS Simulator
         run: |
-          xcodebuild             -project NFCove.xcodeproj             -scheme NFCove             -configuration Debug             -destination "generic/platform=iOS Simulator"             CODE_SIGNING_ALLOWED=NO             build
+          xcodebuild \
+            -project NFCove.xcodeproj \
+            -scheme NFCove \
+            -configuration Release \
+            -destination "generic/platform=iOS Simulator" \
+            CODE_SIGNING_ALLOWED=NO \
+            SWIFT_TREAT_WARNINGS_AS_ERRORS=YES \
+            build
 
       - name: Build unsigned IPA
         run: |
@@ -87,8 +94,8 @@ jobs:
           export P12_PASSWORD="$IOS_P12_PASSWORD"
           export KEYCHAIN_PASSWORD="${IOS_KEYCHAIN_PASSWORD:-nfcove-ci-keychain}"
           export BUNDLE_ID="${IOS_BUNDLE_ID:-com.tiburonns.NFCove}"
-          export EXPORT_METHOD="${IOS_EXPORT_METHOD:-development}"
-          export SIGNING_IDENTITY="${IOS_SIGNING_IDENTITY:-Apple Development}"
+          export EXPORT_METHOD="${IOS_EXPORT_METHOD:-app-store-connect}"
+          export SIGNING_IDENTITY="${IOS_SIGNING_IDENTITY:-Apple Distribution}"
 
           chmod +x scripts/build-signed-ipa.sh
           scripts/build-signed-ipa.sh

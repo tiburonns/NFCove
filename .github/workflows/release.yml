@@ -85,8 +85,8 @@ jobs:
           export P12_PASSWORD="$IOS_P12_PASSWORD"
           export KEYCHAIN_PASSWORD="${IOS_KEYCHAIN_PASSWORD:-nfcove-release-keychain}"
           export BUNDLE_ID="${IOS_BUNDLE_ID:-com.tiburonns.NFCove}"
-          export EXPORT_METHOD="${IOS_EXPORT_METHOD:-development}"
-          export SIGNING_IDENTITY="${IOS_SIGNING_IDENTITY:-Apple Development}"
+          export EXPORT_METHOD="${IOS_EXPORT_METHOD:-app-store-connect}"
+          export SIGNING_IDENTITY="${IOS_SIGNING_IDENTITY:-Apple Distribution}"
 
           chmod +x scripts/build-signed-ipa.sh
           scripts/build-signed-ipa.sh
