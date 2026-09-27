@@ -37,6 +37,17 @@ if f"Esto describe NFCove {version}." not in strings_es:
 
 with (ROOT / "NFCove/Resources/NFCove.entitlements").open("rb") as handle:
     entitlements = plistlib.load(handle)
+with (ROOT / "NFCove/Resources/Info.plist").open("rb") as handle:
+    info = plistlib.load(handle)
+
+if info.get("UIRequiredDeviceCapabilities") != ["nfc"]:
+    raise SystemExit("capability contract failed: UIRequiredDeviceCapabilities must require nfc")
+if not info.get("NFCReaderUsageDescription"):
+    raise SystemExit("capability contract failed: NFCReaderUsageDescription is missing")
+if info.get("ITSAppUsesNonExemptEncryption") is not False:
+    raise SystemExit("release contract failed: NFCove should declare no non-exempt encryption")
+if not (ROOT / "docs/en/testflight.md").exists() or not (ROOT / "docs/es/testflight.md").exists():
+    raise SystemExit("release contract failed: bilingual TestFlight guides are missing")
 
 formats = entitlements.get("com.apple.developer.nfc.readersession.formats", [])
 if "TAG" not in formats:

@@ -27,6 +27,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Validate release contract
+        run: |
+          plutil -lint NFCove/Resources/Info.plist
+          plutil -lint NFCove/Resources/NFCove.entitlements
+          plutil -lint NFCove/Resources/PrivacyInfo.xcprivacy
+          python3 Tests/validate-release-contract.py
+
       - name: Run core logic tests
         run: zsh Tests/run-core-tests.sh
 

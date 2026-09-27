@@ -26,6 +26,25 @@ PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" "$PROFILE_PLIST")
 PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" "$PROFILE_PLIST")
 TEAM_ID=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" "$PROFILE_PLIST")
 
+PROFILE_APP_ID=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" "$PROFILE_PLIST" 2>/dev/null || true)
+PROFILE_GET_TASK_ALLOW=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:get-task-allow" "$PROFILE_PLIST" 2>/dev/null || true)
+PROFILE_NFC_FORMATS=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:com.apple.developer.nfc.readersession.formats" "$PROFILE_PLIST" 2>/dev/null || true)
+
+if [[ "$PROFILE_APP_ID" != "$TEAM_ID.$BUNDLE_ID" ]]; then
+  echo "Provisioning profile application-identifier '$PROFILE_APP_ID' does not match '$TEAM_ID.$BUNDLE_ID'." >&2
+  exit 1
+fi
+
+if [[ "$PROFILE_NFC_FORMATS" != *"TAG"* ]]; then
+  echo "Provisioning profile does not contain the Core NFC TAG entitlement." >&2
+  exit 1
+fi
+
+if [[ "$EXPORT_METHOD" == "app-store-connect" && "$PROFILE_GET_TASK_ALLOW" == "true" ]]; then
+  echo "App Store Connect export requires a distribution profile with get-task-allow=false." >&2
+  exit 1
+fi
+
 mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
 cp "$PROVISIONING_PROFILE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
 
