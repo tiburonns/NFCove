@@ -10,7 +10,7 @@ IPA_PATH="$BUILD_DIR/NFCove-unsigned.ipa"
 rm -rf "$DERIVED_DATA" "$BUILD_DIR/Payload" "$IPA_PATH"
 mkdir -p "$BUILD_DIR"
 
-xcodebuild   -project "$ROOT_DIR/NFCove.xcodeproj"   -scheme NFCove   -configuration Release   -destination "generic/platform=iOS"   -derivedDataPath "$DERIVED_DATA"   CODE_SIGNING_ALLOWED=NO   CODE_SIGNING_REQUIRED=NO   build
+xcodebuild   -project "$ROOT_DIR/NFCove.xcodeproj"   -scheme NFCove   -configuration Release   -destination "generic/platform=iOS"   -derivedDataPath "$DERIVED_DATA"   CODE_SIGNING_ALLOWED=NO   CODE_SIGNING_REQUIRED=NO   SWIFT_TREAT_WARNINGS_AS_ERRORS=YES   build
 
 if [[ ! -d "$APP_PATH" ]]; then
   echo "NFCove.app was not produced at $APP_PATH" >&2

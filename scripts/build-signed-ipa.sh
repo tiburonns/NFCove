@@ -15,8 +15,8 @@ EXPORT_PLIST="$BUILD_DIR/ExportOptions.generated.plist"
 KEYCHAIN_PATH="$BUILD_DIR/nfcove-build.keychain-db"
 
 BUNDLE_ID="${BUNDLE_ID:-com.tiburonns.NFCove}"
-EXPORT_METHOD="${EXPORT_METHOD:-development}"
-SIGNING_IDENTITY="${SIGNING_IDENTITY:-Apple Development}"
+EXPORT_METHOD="${EXPORT_METHOD:-app-store-connect}"
+SIGNING_IDENTITY="${SIGNING_IDENTITY:-Apple Distribution}"
 
 mkdir -p "$BUILD_DIR"
 rm -rf "$ARCHIVE_PATH" "$EXPORT_DIR" "$KEYCHAIN_PATH" "$PROFILE_PLIST" "$EXPORT_PLIST"
@@ -55,7 +55,7 @@ security import "$P12_PATH" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAI
 security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
 security list-keychains -d user -s "$KEYCHAIN_PATH" login.keychain-db
 
-xcodebuild   -project "$ROOT_DIR/NFCove.xcodeproj"   -scheme NFCove   -configuration Release   -destination "generic/platform=iOS"   -archivePath "$ARCHIVE_PATH"   PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID"   DEVELOPMENT_TEAM="$TEAM_ID"   CODE_SIGN_STYLE=Manual   CODE_SIGN_IDENTITY="$SIGNING_IDENTITY"   PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME"   archive
+xcodebuild   -project "$ROOT_DIR/NFCove.xcodeproj"   -scheme NFCove   -configuration Release   -destination "generic/platform=iOS"   -archivePath "$ARCHIVE_PATH"   PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID"   DEVELOPMENT_TEAM="$TEAM_ID"   CODE_SIGN_STYLE=Manual   CODE_SIGN_IDENTITY="$SIGNING_IDENTITY"   PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME"   SWIFT_TREAT_WARNINGS_AS_ERRORS=YES   archive
 
 cat > "$EXPORT_PLIST" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>

@@ -37,7 +37,13 @@ if f"Esto describe NFCove {version}." not in strings_es:
 
 with (ROOT / "NFCove/Resources/NFCove.entitlements").open("rb") as handle:
     entitlements = plistlib.load(handle)
-with (ROOT / "NFCove/Resources/Info.plist").open("rb") as handle:
+info_path = ROOT / "NFCove/Resources/Info.plist"
+info_text = info_path.read_text(encoding="utf-8")
+if info_text.count("<key>ITSAppUsesNonExemptEncryption</key>") != 1:
+    raise SystemExit(
+        "release contract failed: ITSAppUsesNonExemptEncryption must appear exactly once"
+    )
+with info_path.open("rb") as handle:
     info = plistlib.load(handle)
 
 if info.get("UIRequiredDeviceCapabilities") != ["nfc"]:
@@ -73,4 +79,23 @@ if "CA92.1" not in reasons.get("NSPrivacyAccessedAPICategoryUserDefaults", set()
 if "DEVELOPMENT_TEAM =" in project:
     raise SystemExit("build contract failed: project must not hardcode an Apple team")
 
-print(f"PASS: NFCove {version} (build {build}) version, NFC entitlement, privacy, and bilingual docs")
+workflow = (ROOT / ".github/workflows/ios-build.yml").read_text(encoding="utf-8")
+for token in [
+    "Build Release for iOS Simulator",
+    "SWIFT_TREAT_WARNINGS_AS_ERRORS=YES",
+    "app-store-connect",
+    "Apple Distribution",
+]:
+    if token not in workflow:
+        raise SystemExit(f"release CI contract failed: missing {token}")
+
+signed_script = (ROOT / "scripts/build-signed-ipa.sh").read_text(encoding="utf-8")
+for token in [
+    'EXPORT_METHOD="${EXPORT_METHOD:-app-store-connect}"',
+    'SIGNING_IDENTITY="${SIGNING_IDENTITY:-Apple Distribution}"',
+    "SWIFT_TREAT_WARNINGS_AS_ERRORS=YES",
+]:
+    if token not in signed_script:
+        raise SystemExit(f"signed archive contract failed: missing {token}")
+
+print(f"PASS: NFCove {version} (build {build}) version, NFC entitlement, privacy, bilingual docs, and TestFlight signing defaults")
