@@ -15,7 +15,9 @@ enum NDEFBuilder {
     static func message(from card: SavedScanCard) -> NFCNDEFMessage? {
         guard !card.records.isEmpty else { return nil }
 
-        let payloads = card.records.compactMap(payload(from:))
+        let payloads = card.records.compactMap {
+            payload(from: $0)
+        }
         guard payloads.count == card.records.count else { return nil }
 
         return NFCNDEFMessage(records: payloads)
