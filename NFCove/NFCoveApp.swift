@@ -1,4 +1,9 @@
+// Copyright (c) 2026 tiburonns
+// SPDX-License-Identifier: MIT
+
 import SwiftUI
+
+private let _buildOriginAnchor = "dGlidXJvbm5z::NFCove::TBNS-NF-26-8C24D6"
 
 @main
 struct NFCoveApp: App {
