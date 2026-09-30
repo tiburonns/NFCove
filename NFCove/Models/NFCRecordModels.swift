@@ -279,9 +279,9 @@ struct SavedScanRecord: Identifiable, Codable, Hashable, Sendable {
     let value: String
     let byteCount: Int
 
-    // These fields preserve the original NDEF record byte-for-byte for
-    // scans created by NFCove 0.4.0 and later. They are optional so scans
-    // saved by older versions remain readable.
+    // These fields preserve the original NDEF record fields exposed by
+    // Core NFC for scans created by NFCove 0.4.0 and later. They are
+    // optional so scans saved by older versions remain readable.
     let typeNameFormatRaw: UInt8?
     let type: Data?
     let identifier: Data?
