@@ -149,6 +149,14 @@ if not info.get("NFCReaderUsageDescription"):
     raise SystemExit(
         "capability contract failed: NFCReaderUsageDescription is missing"
     )
+if info.get("NFCovePrivacyPolicyURL") != "$(NFCOVE_PRIVACY_POLICY_URL)":
+    raise SystemExit(
+        "release links contract failed: privacy URL must use build setting"
+    )
+if info.get("NFCoveSupportURL") != "$(NFCOVE_SUPPORT_URL)":
+    raise SystemExit(
+        "release links contract failed: support URL must use build setting"
+    )
 if info.get("ITSAppUsesNonExemptEncryption") is not False:
     raise SystemExit(
         "release contract failed: NFCove should declare "
@@ -252,6 +260,28 @@ if "DEVELOPMENT_TEAM =" in project:
     raise SystemExit(
         "build contract failed: project must not hardcode an Apple team"
     )
+
+for token in [
+    'NFCOVE_PRIVACY_POLICY_URL = "";',
+    'NFCOVE_SUPPORT_URL = "";',
+]:
+    if project.count(token) != 2:
+        raise SystemExit(
+            f"release links contract failed: expected two build settings for {token}"
+        )
+
+settings_source = (
+    ROOT / "NFCove/Features/Settings/SettingsView.swift"
+).read_text(encoding="utf-8")
+for token in [
+    'configuredURL(for: "NFCovePrivacyPolicyURL")',
+    'configuredURL(for: "NFCoveSupportURL")',
+    'url.scheme?.lowercased() == "https"',
+]:
+    if token not in settings_source:
+        raise SystemExit(
+            f"release links contract failed: missing {token}"
+        )
 
 workflow = (
     ROOT / ".github/workflows/ios-build.yml"
