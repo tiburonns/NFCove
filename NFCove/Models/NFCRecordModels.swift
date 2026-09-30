@@ -37,10 +37,17 @@ enum NFCRecordContent {
 
         case .email:
             let address = trimmed
-                .replacingOccurrences(of: "mailto:", with: "", options: [.anchored, .caseInsensitive])
+                .replacingOccurrences(
+                    of: "mailto:",
+                    with: "",
+                    options: [.anchored, .caseInsensitive]
+                )
                 .trimmingCharacters(in: .whitespacesAndNewlines)
 
-            let pieces = address.split(separator: "@", omittingEmptySubsequences: false)
+            let pieces = address.split(
+                separator: "@",
+                omittingEmptySubsequences: false
+            )
             guard pieces.count == 2,
                   !pieces[0].isEmpty,
                   !pieces[1].isEmpty,
@@ -210,11 +217,37 @@ enum NFCRecordKind: String, CaseIterable, Codable, Identifiable, Sendable {
 }
 
 struct NFCRecordSnapshot: Identifiable, Hashable, Sendable {
-    let id = UUID()
+    let id: UUID
     let kind: NFCRecordKind?
     let title: String
     let value: String
     let byteCount: Int
+    let typeNameFormatRaw: UInt8?
+    let type: Data?
+    let identifier: Data?
+    let payload: Data?
+
+    init(
+        id: UUID = UUID(),
+        kind: NFCRecordKind?,
+        title: String,
+        value: String,
+        byteCount: Int,
+        typeNameFormatRaw: UInt8? = nil,
+        type: Data? = nil,
+        identifier: Data? = nil,
+        payload: Data? = nil
+    ) {
+        self.id = id
+        self.kind = kind
+        self.title = title
+        self.value = value
+        self.byteCount = byteCount
+        self.typeNameFormatRaw = typeNameFormatRaw
+        self.type = type
+        self.identifier = identifier
+        self.payload = payload
+    }
 }
 
 struct SavedNFCItem: Identifiable, Codable, Hashable, Sendable {
@@ -224,7 +257,13 @@ struct SavedNFCItem: Identifiable, Codable, Hashable, Sendable {
     var value: String
     let createdAt: Date
 
-    init(id: UUID = UUID(), name: String, kind: NFCRecordKind, value: String, createdAt: Date = .now) {
+    init(
+        id: UUID = UUID(),
+        name: String,
+        kind: NFCRecordKind,
+        value: String,
+        createdAt: Date = .now
+    ) {
         self.id = id
         self.name = name
         self.kind = kind
@@ -233,7 +272,6 @@ struct SavedNFCItem: Identifiable, Codable, Hashable, Sendable {
     }
 }
 
-
 struct SavedScanRecord: Identifiable, Codable, Hashable, Sendable {
     let id: UUID
     let kind: NFCRecordKind?
@@ -241,18 +279,34 @@ struct SavedScanRecord: Identifiable, Codable, Hashable, Sendable {
     let value: String
     let byteCount: Int
 
+    // These fields preserve the original NDEF record fields exposed by
+    // Core NFC for scans created by NFCove 0.4.0 and later. They are
+    // optional so scans saved by older versions remain readable.
+    let typeNameFormatRaw: UInt8?
+    let type: Data?
+    let identifier: Data?
+    let payload: Data?
+
     init(
         id: UUID = UUID(),
         kind: NFCRecordKind?,
         title: String,
         value: String,
-        byteCount: Int
+        byteCount: Int,
+        typeNameFormatRaw: UInt8? = nil,
+        type: Data? = nil,
+        identifier: Data? = nil,
+        payload: Data? = nil
     ) {
         self.id = id
         self.kind = kind
         self.title = title
         self.value = value
         self.byteCount = byteCount
+        self.typeNameFormatRaw = typeNameFormatRaw
+        self.type = type
+        self.identifier = identifier
+        self.payload = payload
     }
 
     init(snapshot: NFCRecordSnapshot) {
@@ -260,8 +314,29 @@ struct SavedScanRecord: Identifiable, Codable, Hashable, Sendable {
             kind: snapshot.kind,
             title: snapshot.title,
             value: snapshot.value,
-            byteCount: snapshot.byteCount
+            byteCount: snapshot.byteCount,
+            typeNameFormatRaw: snapshot.typeNameFormatRaw,
+            type: snapshot.type,
+            identifier: snapshot.identifier,
+            payload: snapshot.payload
         )
+    }
+
+    var hasOriginalNDEF: Bool {
+        typeNameFormatRaw != nil &&
+        type != nil &&
+        identifier != nil &&
+        payload != nil
+    }
+
+    var typeHex: String { Self.hex(type) }
+    var identifierHex: String { Self.hex(identifier) }
+    var payloadHex: String { Self.hex(payload) }
+
+    private static func hex(_ data: Data?) -> String {
+        guard let data else { return "—" }
+        if data.isEmpty { return "—" }
+        return data.map { String(format: "%02X", $0) }.joined(separator: " ")
     }
 }
 
@@ -291,5 +366,14 @@ struct SavedScanCard: Identifiable, Codable, Hashable, Sendable {
 
     var totalPayloadBytes: Int {
         records.reduce(0) { $0 + $1.byteCount }
+    }
+
+    var hasOriginalNDEF: Bool {
+        !records.isEmpty && records.allSatisfy(\.hasOriginalNDEF)
+    }
+
+    var canRebuildNDEF: Bool {
+        !records.isEmpty &&
+        records.allSatisfy { $0.hasOriginalNDEF || $0.kind != nil }
     }
 }

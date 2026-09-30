@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 struct SettingsView: View {
@@ -13,36 +14,90 @@ struct SettingsView: View {
         return "\(version) (\(build))"
     }
 
+    private var privacyPolicyURL: URL? {
+        configuredURL(for: "NFCovePrivacyPolicyURL")
+    }
+
+    private var supportURL: URL? {
+        configuredURL(for: "NFCoveSupportURL")
+    }
+
     var body: some View {
         NavigationStack {
             Form {
                 Section("settings.language.section") {
-                    Picker("settings.language.picker", selection: $languageManager.selection) {
+                    Picker(
+                        "settings.language.picker",
+                        selection: $languageManager.selection
+                    ) {
                         ForEach(AppLanguage.allCases) { language in
-                            Text(LocalizedStringKey(language.localizationKey))
-                                .tag(language)
+                            Text(
+                                LocalizedStringKey(
+                                    language.localizationKey
+                                )
+                            )
+                            .tag(language)
                         }
                     }
                 }
 
                 Section("settings.about.section") {
-                    LabeledContent("settings.about.version", value: appVersion)
+                    LabeledContent(
+                        "settings.about.version",
+                        value: appVersion
+                    )
+
                     NavigationLink {
                         PrivacyView()
                     } label: {
-                        LabeledContent("settings.about.privacy") {
+                        LabeledContent(
+                            "settings.about.privacy"
+                        ) {
                             Text("settings.about.localOnly")
                                 .foregroundStyle(.secondary)
                         }
                     }
-                }
 
-                Section("settings.expert.section") {
-                    Label("settings.expert.comingSoon", systemImage: "wrench.and.screwdriver")
-                        .foregroundStyle(.secondary)
+                    if let privacyPolicyURL {
+                        Link(destination: privacyPolicyURL) {
+                            Label(
+                                "settings.about.privacyPolicy",
+                                systemImage: "hand.raised"
+                            )
+                        }
+                    }
+
+                    if let supportURL {
+                        Link(destination: supportURL) {
+                            Label(
+                                "settings.about.support",
+                                systemImage: "questionmark.circle"
+                            )
+                        }
+                    }
                 }
             }
             .navigationTitle("settings.title")
         }
+    }
+
+    private func configuredURL(for key: String) -> URL? {
+        guard let value = Bundle.main.object(
+            forInfoDictionaryKey: key
+        ) as? String else {
+            return nil
+        }
+
+        let trimmed = value.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+        guard !trimmed.isEmpty,
+              let url = URL(string: trimmed),
+              url.scheme?.lowercased() == "https",
+              url.host != nil else {
+            return nil
+        }
+
+        return url
     }
 }

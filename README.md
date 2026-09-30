@@ -2,11 +2,11 @@
 
 **Read. Build. Automate.**
 
-NFCove is a modern, native NFC toolkit for iPhone. The project starts with the essentials—reading and writing NDEF records—and is designed to grow into a visual NFC library, automation builder, tag inspector, batch writer, verifier, and advanced developer toolkit.
+NFCove is a native NFC utility for iPhone focused on a reliable NDEF workflow: read, inspect, save, create, write, and verify compatible NFC tags.
 
 > Documentation: **English** · [Español](README.es.md)
 
-> **Current development version:** 0.3.1 (build 7). Tagged releases are produced from the same tested IPA pipeline used by CI.
+> **Current development version:** 0.4.0 (build 8). Tagged releases are produced from the same tested IPA pipeline used by CI.
 
 ## Current foundation
 
@@ -14,19 +14,18 @@ NFCove is a modern, native NFC toolkit for iPhone. The project starts with the e
 - Core NFC NDEF reader using the current `TAG` NFC entitlement
 - NDEF writer for Text, URL, Email, Phone, SMS, and Location records
 - Human-readable payload parser
-- Scan results can be saved as complete reusable library entries with all displayed NDEF records, capacity, access status, and scan date
+- Scan results can be saved as reusable library entries with the original NDEF TNF, type, identifier, payload, and record order when available
 - Local library stored atomically in Application Support, with migration from the earlier preferences-backed format
-- Saved library items can be opened in a dedicated Use Card view, launched with their matching iPhone action, or written directly back to a compatible tag
+- Saved scans and created cards can be reopened and written back to a compatible tag, with read-back verification
 - URL, email, phone, SMS, and location content is normalized and validated before an NDEF message is created
 - Post-write read-back verification for compatible NDEF tags
 - Portable core tests run in CI for normalization, persistence, migration, and corrupt-store preservation
 - English, Spanish, and System Language modes
-- Architecture prepared for templates, history, verification, batch writing, App Intents, iCloud sync, and expert tag protocols
 - No third-party runtime dependencies
 
 ## Requirements
 
-- Xcode 16 or newer
+- Xcode 26 or newer for App Store/TestFlight release builds
 - iOS 18 or newer
 - A physical NFC-capable iPhone for NFC operations
 - An Apple Developer signing setup with the **Near Field Communication Tag Reading** capability enabled
@@ -53,11 +52,11 @@ NFCove/
 └── Resources/      Info.plist, entitlements and localization
 ```
 
-See [docs/en/architecture.md](docs/en/architecture.md) for the architecture and roadmap, [docs/en/ipa.md](docs/en/ipa.md) for IPA builds and signing, [docs/en/testing.md](docs/en/testing.md) for the physical-device release gate, and [docs/en/testflight.md](docs/en/testflight.md) for the TestFlight preflight.
+See [docs/en/architecture.md](docs/en/architecture.md) for architecture, [docs/en/ipa.md](docs/en/ipa.md) for IPA builds and signing, [docs/en/testing.md](docs/en/testing.md) for the physical-device release gate, [docs/en/testflight.md](docs/en/testflight.md) for TestFlight preflight, and [docs/en/app-store.md](docs/en/app-store.md) for App Store submission.
 
 ## Product direction
 
-NFCove is intentionally not a visual clone of existing NFC utilities. The goal is to make NFC workflows feel like a first-class Apple platform experience: visual records, reusable templates, clear compatibility feedback, safe write verification, organized tag libraries, and deep Shortcuts integration.
+NFCove is intentionally not a visual clone of existing NFC utilities. The goal is to make common NFC workflows feel like a first-class Apple platform experience: clear scan results, reliable local storage, transparent compatibility feedback, and verified writing.
 
 ## Privacy
 
@@ -65,4 +64,4 @@ NFC reads and writes happen locally through Apple's Core NFC framework. The curr
 
 ## Status
 
-Active development. The current foundation is buildable/tested in CI, while NFC read/write behavior still requires a physical NFC-capable iPhone for final hardware validation.
+Release hardening for 0.4.0. CI targets macOS 26 / Xcode 26+, while final NFC acceptance still requires a physical NFC-capable iPhone. The final App Icon, public privacy/support URLs, screenshots, and App Store Connect metadata are external release-gate items.

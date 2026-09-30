@@ -6,18 +6,13 @@
 "tab.settings" = "Ajustes";
 
 "home.hero.title" = "Tu espacio NFC";
-"home.hero.subtitle" = "Lee tags, crea records NDEF, guarda ideas reutilizables y construye flujos NFC cada vez más avanzados.";
+"home.hero.subtitle" = "Lee, guarda, crea, escribe y verifica tags NFC desde un solo lugar.";
 "home.scan.title" = "Escanear un tag";
 "home.scan.subtitle" = "Lee e inspecciona contenido NDEF.";
 "home.create.title" = "Crear y escribir";
 "home.create.subtitle" = "Crea contenido y escríbelo en un tag compatible.";
 "home.library.title" = "Biblioteca";
-"home.library.subtitle" = "Mantén tus records NFC listos para reutilizar.";
-"home.roadmap.title" = "Preparada para crecer";
-"home.roadmap.verify" = "Verificar después de escribir";
-"home.roadmap.batch" = "Escritura por lotes";
-"home.roadmap.shortcuts" = "Atajos y App Intents";
-
+"home.library.subtitle" = "Vuelve a abrir tags escaneados y reutiliza las tarjetas que creaste.";
 "scan.title" = "Escanear";
 "scan.button" = "Iniciar escaneo";
 "scan.results.empty.title" = "Aún no has escaneado un tag";
@@ -43,7 +38,7 @@
 
 "library.title" = "Biblioteca";
 "library.empty.title" = "Tu biblioteca está vacía";
-"library.empty.subtitle" = "Crea un record NFC y guárdalo aquí para reutilizarlo rápidamente.";
+"library.empty.subtitle" = "Escanea un tag o crea un record NFC para guardarlo aquí y reutilizarlo.";
 "library.write" = "Escribir en tag";
 
 "settings.title" = "Ajustes";
@@ -53,8 +48,6 @@
 "settings.about.version" = "Versión";
 "settings.about.privacy" = "Datos NFC";
 "settings.about.localOnly" = "Procesados localmente";
-"settings.expert.section" = "Herramientas expertas";
-"settings.expert.comingSoon" = "Los protocolos avanzados son el siguiente paso del roadmap";
 
 "language.system" = "Idioma del sistema";
 "language.english" = "Inglés";
@@ -116,13 +109,13 @@
 
 "privacy.title" = "Privacidad";
 "privacy.summary.section" = "Cómo maneja NFCove tus datos";
-"privacy.summary.footer" = "Esto describe NFCove 0.3.1. Las futuras funciones en línea o de iCloud se documentarán antes de habilitarse.";
+"privacy.summary.footer" = "Esto describe NFCove 0.4.0. El contenido NFC y los escaneos guardados permanecen en este dispositivo salvo que abras o compartas explícitamente su contenido con otra app.";
 "privacy.tracking.title" = "Sin rastreo";
 "privacy.tracking.detail" = "NFCove no te rastrea entre aplicaciones o sitios web.";
 "privacy.nfc.title" = "NFC permanece en tu dispositivo";
 "privacy.nfc.detail" = "El contenido de los tags se lee, crea y verifica localmente mediante Core NFC.";
 "privacy.storage.title" = "Preferencias locales";
-"privacy.storage.detail" = "Tu selección de idioma y la biblioteca actual se almacenan localmente para uso de NFCove.";
+"privacy.storage.detail" = "Tu selección de idioma, tarjetas creadas, detalles de tags escaneados y records NDEF originales se almacenan localmente para uso de NFCove.";
 "privacy.account.title" = "Sin cuenta obligatoria";
 "privacy.account.detail" = "Esta versión no requiere una cuenta de NFCove ni sube el contenido NFC a un servidor de NFCove.";
 "privacy.technical.section" = "Manifiesto de privacidad";
@@ -140,12 +133,39 @@
 "library.use.copied" = "Copiado";
 "library.use.action.section" = "Usar";
 "library.use.action.footer" = "Usa el contenido guardado con la app correspondiente del iPhone o escribe el mismo payload NDEF en un tag físico compatible.";
-"library.use.nfc.section" = "Presentación NFC";
-"library.use.nfc.generic.title" = "La emulación NDEF genérica no está disponible";
-"library.use.nfc.generic.detail" = "Las apps de iPhone no pueden presentar cualquier tag NDEF guardado como si el iPhone fuera ese tag físico. Usa Escribir en tag para tarjetas NDEF reutilizables.";
-"library.use.nfc.secure.title" = "Credenciales contactless seguras";
-"library.use.nfc.secure.detail" = "Las credenciales elegibles respaldadas por un emisor pueden usar las capacidades NFC & SE de Apple después de aprobación y aprovisionamiento. NFCove no clona UID, tarjetas de pago, credenciales de acceso ni credenciales protegidas.";
 "library.use.write" = "Escribir tarjeta guardada en tag NFC";
 "library.use.status.ready" = "Lista para usar";
-"library.use.status.local" = "Acción local";
-"library.use.status.tag" = "Reutilizable en un tag NFC físico";
+
+"scan.button.hint" = "Inicia una sesión de lectura con Core NFC.";
+"scan.save.button.hint" = "Guarda el tag escaneado y sus detalles NDEF en Biblioteca.";
+
+"create.validation.invalid" = "Introduce un valor válido para el tipo de record seleccionado.";
+"create.library.save.hint" = "Guarda esta tarjeta localmente en NFCove.";
+"create.write.button.hint" = "Inicia una sesión NFC para escribir y verificar este record.";
+
+"library.use.now.hint" = "Usa este contenido guardado con la acción correspondiente del iPhone.";
+"library.use.write.hint" = "Escribe y verifica esta tarjeta guardada en un tag NFC compatible.";
+
+"library.scan.copyQuality" = "NDEF guardado";
+"library.scan.copyQuality.exact" = "Original";
+"library.scan.copyQuality.reconstructed" = "Reconstruido";
+"library.scan.write" = "Escribir escaneo guardado en tag NFC";
+"library.scan.write.hint" = "Escribe este mensaje NDEF guardado en un tag físico compatible y lo verifica.";
+"library.scan.write.footer.exact" = "NFCove conservó el TNF, tipo, identificador, payload y orden original de records de este escaneo.";
+"library.scan.write.footer.reconstructed" = "Este escaneo anterior no contiene los campos NDEF originales. NFCove reconstruirá los records compatibles desde los valores guardados.";
+"library.scan.technicalDetails" = "Detalles técnicos";
+"library.scan.tnf" = "TNF";
+"library.scan.type" = "Tipo (HEX)";
+"library.scan.identifier" = "Identificador (HEX)";
+"library.scan.payload" = "Payload (HEX)";
+
+"nfc.error.timeout" = "La sesión NFC agotó el tiempo. Intenta de nuevo y mantén el tag cerca de la parte superior del iPhone.";
+"nfc.error.systemBusy" = "NFC está ocupado temporalmente. Cierra otra actividad NFC e intenta de nuevo.";
+"nfc.error.tagMoved" = "Se perdió la conexión con el tag. Mantenlo inmóvil hasta que NFCove termine.";
+"nfc.error.radioDisabled" = "NFC no está disponible en este momento en este iPhone.";
+
+"library.scan.copyQuality.viewOnly" = "Sólo lectura";
+"library.scan.write.footer.unavailable" = "Este escaneo anterior contiene records que NFCove puede mostrar, pero no puede reconstruir de forma segura para escribirlos.";
+
+"settings.about.privacyPolicy" = "Política de privacidad";
+"settings.about.support" = "Soporte";
