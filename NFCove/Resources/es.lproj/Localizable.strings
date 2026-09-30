@@ -163,3 +163,6 @@
 "nfc.error.systemBusy" = "NFC está ocupado temporalmente. Cierra otra actividad NFC e intenta de nuevo.";
 "nfc.error.tagMoved" = "Se perdió la conexión con el tag. Mantenlo inmóvil hasta que NFCove termine.";
 "nfc.error.radioDisabled" = "NFC no está disponible en este momento en este iPhone.";
+
+"library.scan.copyQuality.viewOnly" = "Sólo lectura";
+"library.scan.write.footer.unavailable" = "Este escaneo anterior contiene records que NFCove puede mostrar, pero no puede reconstruir de forma segura para escribirlos.";
