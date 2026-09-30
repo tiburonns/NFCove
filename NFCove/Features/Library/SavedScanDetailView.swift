@@ -1,4 +1,5 @@
 import CoreNFC
+import Foundation
 import SwiftUI
 
 struct SavedScanDetailView: View {
@@ -61,16 +62,12 @@ struct SavedScanDetailView: View {
                     value: "\(card.totalPayloadBytes) B"
                 )
                 LabeledContent("library.scan.copyQuality") {
-                    Text(
-                        card.hasOriginalNDEF
-                            ? "library.scan.copyQuality.exact"
-                            : "library.scan.copyQuality.reconstructed"
-                    )
-                    .foregroundStyle(
-                        card.hasOriginalNDEF
-                            ? .primary
-                            : .secondary
-                    )
+                    if card.hasOriginalNDEF {
+                        Text("library.scan.copyQuality.exact")
+                    } else {
+                        Text("library.scan.copyQuality.reconstructed")
+                            .foregroundStyle(.secondary)
+                    }
                 }
             } header: {
                 Text("library.scan.info.section")
@@ -95,11 +92,11 @@ struct SavedScanDetailView: View {
                 )
                 .accessibilityHint("library.scan.write.hint")
             } footer: {
-                Text(
-                    card.hasOriginalNDEF
-                        ? "library.scan.write.footer.exact"
-                        : "library.scan.write.footer.reconstructed"
-                )
+                if card.hasOriginalNDEF {
+                    Text("library.scan.write.footer.exact")
+                } else {
+                    Text("library.scan.write.footer.reconstructed")
+                }
             }
 
             if manager.isActive ||
