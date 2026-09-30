@@ -1,4 +1,4 @@
-# NFCove 0.3.1 — Physical Device Acceptance Plan
+# NFCove 0.4.0 — Physical Device Acceptance Plan
 
 [Español](../es/testing.md) · **English**
 
@@ -27,6 +27,8 @@ For every tag: start a scan, present one tag, confirm the native NFC sheet appea
 
 After every successful scan, tap **Save scan**, give it a name, open **Library → Scanned tags**, reopen it, and verify that record count, values, byte sizes, capacity, access state, and scan date remain available after force-quitting and relaunching NFCove.
 
+For a newly saved scan, expand **Technical details** and verify TNF, Type, Identifier, and Payload are present for each NDEF record. For a multi-record tag, confirm record order is unchanged. Then choose **Write saved scan to NFC tag**, write to a second compatible tag, and scan it back. The saved scan should report **Original** rather than **Reconstructed**.
+
 ## Write and read-back verification
 
 For Text, URL, Email, Phone, SMS, and Location: enter a valid value, confirm non-zero estimated size, write to a writable tag with enough capacity, keep the tag in range through verification, confirm **written and verified**, then scan it again and compare the visible value.
@@ -49,6 +51,10 @@ Present two tags simultaneously during read and write. NFCove must request a sin
 
 Upgrade over a build that stored `nfcove.library.items` in UserDefaults without deleting app data. Existing items must appear, survive another relaunch, and the legacy preference must only disappear after the new file was safely written.
 
+## Accessibility and UI
+
+Test the main flows with large Dynamic Type, VoiceOver, portrait, and landscape. Buttons must retain understandable labels and hints, content must remain reachable, and no screen may be constrained to a centered square.
+
 ## Failure paths
 
 Test user cancellation, moving the phone away mid-session, read-only/unsupported tags, and rapid repeated button taps. NFCove must never report verified success after failure, must prevent overlapping sessions, and must allow a new session without restarting the app.
@@ -61,4 +67,4 @@ An IPA that installs but cannot open a Core NFC session does **not** pass releas
 
 ## Acceptance result
 
-A candidate passes only when all six supported record kinds read/write/verify, invalid/capacity/read-only/multiple-tag cases fail safely, the library and legacy migration preserve data, all three language modes behave correctly, and the intended IPA path retains NFC capability.
+A candidate passes only when all six supported record kinds read/write/verify, newly scanned NDEF records preserve their original raw fields and can be written back, invalid/capacity/read-only/multiple-tag cases fail safely, library/migration preserve data, accessibility checks pass, all language modes behave correctly, and the intended IPA path retains NFC capability.
