@@ -7,6 +7,10 @@ struct HomeView: View {
     let onCreate: () -> Void
     let onLibrary: () -> Void
 
+    private var libraryCount: Int {
+        library.items.count + library.scannedCards.count
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -32,22 +36,10 @@ struct HomeView: View {
                             title: "home.library.title",
                             subtitle: "home.library.subtitle",
                             systemImage: "books.vertical",
-                            badge: "\(library.items.count)",
+                            badge: "\(libraryCount)",
                             action: onLibrary
                         )
                     }
-
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("home.roadmap.title")
-                            .font(.headline)
-
-                        Label("home.roadmap.verify", systemImage: "checkmark.shield")
-                        Label("home.roadmap.batch", systemImage: "square.stack.3d.up")
-                        Label("home.roadmap.shortcuts", systemImage: "wand.and.stars")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
                 }
                 .padding()
             }
@@ -60,6 +52,7 @@ struct HomeView: View {
             Image(systemName: "sensor.tag.radiowaves.forward")
                 .font(.system(size: 40, weight: .semibold))
                 .symbolRenderingMode(.hierarchical)
+                .accessibilityHidden(true)
 
             Text("home.hero.title")
                 .font(.largeTitle.bold())
@@ -70,7 +63,11 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(22)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .background(
+            .regularMaterial,
+            in: RoundedRectangle(cornerRadius: 28, style: .continuous)
+        )
+        .accessibilityElement(children: .combine)
     }
 
     private func actionCard(
@@ -85,7 +82,14 @@ struct HomeView: View {
                 Image(systemName: systemImage)
                     .font(.title2)
                     .frame(width: 42, height: 42)
-                    .background(.quaternary, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .background(
+                        .quaternary,
+                        in: RoundedRectangle(
+                            cornerRadius: 12,
+                            style: .continuous
+                        )
+                    )
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(title)
@@ -109,11 +113,15 @@ struct HomeView: View {
                 Image(systemName: "chevron.right")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
             }
             .padding()
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .background(
+            .thinMaterial,
+            in: RoundedRectangle(cornerRadius: 20, style: .continuous)
+        )
     }
 }
