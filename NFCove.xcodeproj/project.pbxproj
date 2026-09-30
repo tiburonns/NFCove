@@ -25,6 +25,7 @@
 		A0000000000000000000000F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000002 /* InfoPlist.strings */; };
 		A00000000000000000000011 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000016 /* PrivacyInfo.xcprivacy */; };
 		A00000000000000000000012 /* PrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000017 /* PrivacyView.swift */; };
+		A00000000000000000000013 /* SavedCardUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000018 /* SavedCardUseView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		B00000000000000000000014 /* NFCove.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NFCove.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B00000000000000000000016 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		B00000000000000000000017 /* PrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyView.swift; sourceTree = "<group>"; };
+		B00000000000000000000018 /* SavedCardUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedCardUseView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,7 +159,7 @@
 		E0000000000000000000000C /* Home */ = {isa = PBXGroup; children = (B00000000000000000000009 /* HomeView.swift */,); path = Home; sourceTree = "<group>"; };
 		E0000000000000000000000D /* Scan */ = {isa = PBXGroup; children = (B0000000000000000000000A /* ScanView.swift */,); path = Scan; sourceTree = "<group>"; };
 		E0000000000000000000000E /* Create */ = {isa = PBXGroup; children = (B0000000000000000000000B /* CreateView.swift */,); path = Create; sourceTree = "<group>"; };
-		E0000000000000000000000F /* Library */ = {isa = PBXGroup; children = (B0000000000000000000000C /* LibraryView.swift */,); path = Library; sourceTree = "<group>"; };
+		E0000000000000000000000F /* Library */ = {isa = PBXGroup; children = (B0000000000000000000000C /* LibraryView.swift */, B00000000000000000000018 /* SavedCardUseView.swift */,); path = Library; sourceTree = "<group>"; };
 		E00000000000000000000010 /* Settings */ = {isa = PBXGroup; children = (B0000000000000000000000D /* SettingsView.swift */, B00000000000000000000017 /* PrivacyView.swift */,); path = Settings; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
@@ -246,6 +248,7 @@
 				A0000000000000000000000C /* LibraryView.swift in Sources */,
 				A0000000000000000000000D /* SettingsView.swift in Sources */,
 				A00000000000000000000012 /* PrivacyView.swift in Sources */,
+				A00000000000000000000013 /* SavedCardUseView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,12 +313,12 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = NFCove/Resources/NFCove.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NFCove/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tiburonns.NFCove;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -331,12 +334,12 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = NFCove/Resources/NFCove.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NFCove/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tiburonns.NFCove;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
