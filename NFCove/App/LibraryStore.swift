@@ -89,7 +89,7 @@ final class LibraryStore: ObservableObject {
         scannedCards.insert(
             SavedScanCard(
                 name: finalName,
-                records: records.map(SavedScanRecord.init(snapshot:)),
+                records: records.map { SavedScanRecord(snapshot: $0) },
                 tagCapacity: tagCapacity,
                 tagAccessKey: tagAccessKey
             ),
