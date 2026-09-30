@@ -166,3 +166,6 @@
 
 "library.scan.copyQuality.viewOnly" = "View only";
 "library.scan.write.footer.unavailable" = "This older scan contains records that NFCove can display but cannot reconstruct safely for writing.";
+
+"settings.about.privacyPolicy" = "Privacy Policy";
+"settings.about.support" = "Support";
