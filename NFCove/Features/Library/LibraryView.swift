@@ -4,10 +4,14 @@ struct LibraryView: View {
     @EnvironmentObject private var library: LibraryStore
     @StateObject private var manager = NFCSessionManager()
 
+    private var isEmpty: Bool {
+        library.items.isEmpty && library.scannedCards.isEmpty
+    }
+
     var body: some View {
         NavigationStack {
             Group {
-                if library.items.isEmpty {
+                if isEmpty {
                     VStack(spacing: 16) {
                         ContentUnavailableView(
                             "library.empty.title",
@@ -28,40 +32,55 @@ struct LibraryView: View {
                             }
                         }
 
-                        Section {
-                            ForEach(library.items) { item in
-                                NavigationLink {
-                                    SavedCardUseView(
-                                        item: item,
-                                        manager: manager
-                                    )
-                                } label: {
-                                    libraryRow(item)
-                                }
-                                .swipeActions(
-                                    edge: .leading,
-                                    allowsFullSwipe: false
-                                ) {
-                                    Button {
-                                        write(item)
+                        if !library.scannedCards.isEmpty {
+                            Section("library.scanned.section") {
+                                ForEach(library.scannedCards) { card in
+                                    NavigationLink {
+                                        SavedScanDetailView(card: card)
                                     } label: {
-                                        Label(
-                                            "library.write",
-                                            systemImage: "wave.3.right"
+                                        scannedCardRow(card)
+                                    }
+                                }
+                                .onDelete(perform: library.deleteScannedCard)
+                            }
+                        }
+
+                        if !library.items.isEmpty {
+                            Section("library.created.section") {
+                                ForEach(library.items) { item in
+                                    NavigationLink {
+                                        SavedCardUseView(
+                                            item: item,
+                                            manager: manager
+                                        )
+                                    } label: {
+                                        libraryRow(item)
+                                    }
+                                    .swipeActions(
+                                        edge: .leading,
+                                        allowsFullSwipe: false
+                                    ) {
+                                        Button {
+                                            write(item)
+                                        } label: {
+                                            Label(
+                                                "library.write",
+                                                systemImage: "wave.3.right"
+                                            )
+                                        }
+                                        .tint(.accentColor)
+                                        .disabled(
+                                            !manager.isNFCAvailable ||
+                                            manager.isActive ||
+                                            NDEFBuilder.message(
+                                                for: item.kind,
+                                                value: item.value
+                                            ) == nil
                                         )
                                     }
-                                    .tint(.accentColor)
-                                    .disabled(
-                                        !manager.isNFCAvailable ||
-                                        manager.isActive ||
-                                        NDEFBuilder.message(
-                                            for: item.kind,
-                                            value: item.value
-                                        ) == nil
-                                    )
                                 }
+                                .onDelete(perform: library.delete)
                             }
-                            .onDelete(perform: library.delete)
                         }
                     }
                 }
@@ -109,6 +128,33 @@ struct LibraryView: View {
 
             persistenceErrorView
         }
+    }
+
+    private func scannedCardRow(_ card: SavedScanCard) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            HStack {
+                Label(card.name, systemImage: "sensor.tag.radiowaves.forward")
+                    .font(.headline)
+
+                Spacer()
+
+                Text("\(card.records.count)")
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.secondary)
+            }
+
+            if let first = card.records.first {
+                Text(first.value)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+
+            Text(card.scannedAt, style: .date)
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+        }
+        .padding(.vertical, 4)
     }
 
     private func libraryRow(_ item: SavedNFCItem) -> some View {
