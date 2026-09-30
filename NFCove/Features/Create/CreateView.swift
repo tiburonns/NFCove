@@ -1,4 +1,5 @@
 import CoreNFC
+import Foundation
 import SwiftUI
 import UIKit
 
