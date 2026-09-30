@@ -1,4 +1,4 @@
-# NFCove 0.3.1 — Plan de aceptación en dispositivo físico
+# NFCove 0.4.0 — Plan de aceptación en dispositivo físico
 
 **Español** · [English](../en/testing.md)
 
@@ -27,6 +27,8 @@ En cada tag inicia el escaneo, presenta un solo tag, confirma la hoja nativa de 
 
 Después de cada escaneo correcto pulsa **Guardar escaneo**, asígnale un nombre, abre **Biblioteca → Tags escaneados**, vuelve a abrirlo y confirma que número de records, valores, bytes, capacidad, estado de acceso y fecha permanezcan disponibles después de cerrar a la fuerza y reabrir NFCove.
 
+En un escaneo nuevo expande **Detalles técnicos** y verifica TNF, Tipo, Identificador y Payload de cada record NDEF. En un tag con varios records confirma que el orden no cambió. Después usa **Escribir escaneo guardado en tag NFC**, escribe en un segundo tag compatible y vuelve a escanearlo. El escaneo guardado debe indicar **Original** y no **Reconstruido**.
+
 ## Escritura y verificación por relectura
 
 Para Texto, URL, Email, Teléfono, SMS y Ubicación: introduce un valor válido, confirma tamaño mayor que cero, escribe en un tag con capacidad suficiente, mantenlo cerca durante la verificación, confirma **escrito y verificado** y vuelve a escanearlo.
@@ -49,6 +51,10 @@ Presenta dos tags simultáneamente durante lectura y escritura. NFCove debe pedi
 
 Actualiza encima de una compilación que guardaba `nfcove.library.items` en UserDefaults sin borrar los datos. Los elementos deben aparecer, sobrevivir otro relanzamiento y la preferencia anterior sólo debe eliminarse después de escribir correctamente el nuevo archivo.
 
+## Accesibilidad e interfaz
+
+Prueba los flujos principales con Dynamic Type grande, VoiceOver, vertical y horizontal. Los botones deben conservar etiquetas y ayudas comprensibles, todo el contenido debe ser accesible y ninguna pantalla debe quedar encerrada en un cuadro centrado.
+
 ## Casos de fallo
 
 Prueba cancelación, alejar el teléfono a mitad de sesión, tags de sólo lectura/no compatibles y pulsaciones rápidas repetidas. NFCove nunca debe anunciar éxito verificado tras un fallo, debe impedir sesiones superpuestas y permitir iniciar otra sesión sin reiniciar.
@@ -61,4 +67,4 @@ Una IPA que se instala pero no puede abrir una sesión Core NFC **no** pasa acep
 
 ## Resultado
 
-El candidato pasa únicamente cuando los seis tipos soportados leen/escriben/verifican, los casos inválidos/capacidad/sólo lectura/varios tags fallan de forma segura, Biblioteca y migración conservan datos, los tres modos de idioma funcionan y la ruta de IPA conserva la capacidad NFC.
+El candidato pasa únicamente cuando los seis tipos soportados leen/escriben/verifican, los escaneos nuevos preservan los campos NDEF originales y pueden volver a escribirse, los casos inválidos/capacidad/sólo lectura/varios tags fallan de forma segura, Biblioteca/migración conservan datos, pasan las pruebas de accesibilidad, funcionan todos los idiomas y la ruta de IPA conserva la capacidad NFC.
