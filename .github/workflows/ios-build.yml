@@ -39,6 +39,11 @@ jobs:
         run: |
           xcodebuild -version
           swift --version
+          XCODE_MAJOR="$(xcodebuild -version | awk 'NR==1 {split($2,v,"."); print v[1]}')"
+          if [[ "$XCODE_MAJOR" -lt 26 ]]; then
+            echo "NFCove App Store candidates require Xcode 26 or newer."
+            exit 1
+          fi
 
       - name: Validate project contract
         run: |
