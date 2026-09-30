@@ -68,7 +68,7 @@ struct ScanView: View {
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
-                        .accessibilityLabel(error)
+                        .accessibilityLabel(Text(error))
                 }
 
                 Button {
