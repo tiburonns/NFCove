@@ -64,8 +64,11 @@ struct SavedScanDetailView: View {
                 LabeledContent("library.scan.copyQuality") {
                     if card.hasOriginalNDEF {
                         Text("library.scan.copyQuality.exact")
-                    } else {
+                    } else if card.canRebuildNDEF {
                         Text("library.scan.copyQuality.reconstructed")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("library.scan.copyQuality.viewOnly")
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -94,8 +97,10 @@ struct SavedScanDetailView: View {
             } footer: {
                 if card.hasOriginalNDEF {
                     Text("library.scan.write.footer.exact")
-                } else {
+                } else if card.canRebuildNDEF {
                     Text("library.scan.write.footer.reconstructed")
+                } else {
+                    Text("library.scan.write.footer.unavailable")
                 }
             }
 
