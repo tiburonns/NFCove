@@ -16,13 +16,14 @@ struct NFCoveCoreLogicIntegration {
     @MainActor
     static func main() throws {
         try testContentNormalization()
+        try testSavedCardActions()
         try testLibraryPersistence()
         try testLegacyMigration()
         try testCorruptLegacyMigrationPreservesBytes()
         try testCorruptStorePreservation()
         try testInvalidStoredRecordIsQuarantined()
         try testRepeatedCorruptionCreatesUniqueBackups()
-        print("PASS: NFC normalization, library persistence, migration, validation, and corrupt-store preservation")
+        print("PASS: NFC normalization, saved-card actions, library persistence, migration, validation, and corrupt-store preservation")
     }
 
     private static func require(
@@ -121,6 +122,38 @@ struct NFCoveCoreLogicIntegration {
                 value: "25.0, -181.0"
             ) == nil,
             "Out-of-range longitude was accepted"
+        )
+    }
+
+    private static func testSavedCardActions() throws {
+        try require(
+            NFCRecordContent.actionURL(for: .text, value: "Hello") == nil,
+            "Text should use the local copy action"
+        )
+        try require(
+            NFCRecordContent.actionURL(for: .url, value: "example.com")?.absoluteString == "https://example.com",
+            "Saved URL action resolution failed"
+        )
+        try require(
+            NFCRecordContent.actionURL(for: .email, value: "hello@example.com")?.scheme == "mailto",
+            "Saved email action resolution failed"
+        )
+        try require(
+            NFCRecordContent.actionURL(for: .phone, value: "+52 81 1234 5678")?.scheme == "tel",
+            "Saved phone action resolution failed"
+        )
+        try require(
+            NFCRecordContent.actionURL(for: .sms, value: "+52 81 1234 5678")?.scheme == "sms",
+            "Saved SMS action resolution failed"
+        )
+        let mapURL = NFCRecordContent.actionURL(
+            for: .location,
+            value: "25.6866, -100.3161"
+        )
+        try require(
+            mapURL?.host == "maps.apple.com" &&
+            mapURL?.absoluteString.contains("ll=25.6866,-100.3161") == true,
+            "Saved location action resolution failed"
         )
     }
 
