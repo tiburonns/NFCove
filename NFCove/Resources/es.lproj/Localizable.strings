@@ -166,3 +166,6 @@
 
 "library.scan.copyQuality.viewOnly" = "Sólo lectura";
 "library.scan.write.footer.unavailable" = "Este escaneo anterior contiene records que NFCove puede mostrar, pero no puede reconstruir de forma segura para escribirlos.";
+
+"settings.about.privacyPolicy" = "Política de privacidad";
+"settings.about.support" = "Soporte";
