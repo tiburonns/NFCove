@@ -447,7 +447,7 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
             key = nil
         }
 
-        return key.map(AppLocalization.string)
+        return key.map { AppLocalization.string($0) }
             ?? error.localizedDescription
     }
 }
