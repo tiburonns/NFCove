@@ -1,4 +1,4 @@
-# NFCove 0.2.3 — Preflight de TestFlight
+# NFCove 0.4.0 — Preflight de TestFlight
 
 NFCove requiere un iPhone físico compatible con NFC y un perfil de Apple Developer que incluya **Near Field Communication Tag Reading**.
 
@@ -9,14 +9,14 @@ NFCove requiere un iPhone físico compatible con NFC y un perfil de Apple Develo
 3. Crea/descarga un perfil de distribución App Store para ese App ID.
 4. Confirma que incluya `com.apple.developer.nfc.readersession.formats = TAG`.
 5. Usa certificado Apple Distribution.
-6. Prueba lectura, escritura, verificación, tags no compatibles/read-only, cancelación y timeout en iPhone real.
-7. Prueba Sistema, English y Español.
+6. Prueba lectura, guardar/reabrir, detalles NDEF originales, escribir un escaneo guardado, escritura/verificación normal, tags no compatibles/read-only, cancelación y timeout en iPhone real.
+7. Prueba Sistema, English, Español, Dynamic Type grande y VoiceOver.
 
 `UIRequiredDeviceCapabilities = nfc` es intencional porque la función principal de NFCove requiere NFC.
 
 ## Archive / TestFlight
 
-1. Abre `NFCove.xcodeproj` con Xcode 26 o posterior.
+1. Abre `NFCove.xcodeproj` con Xcode 26 o posterior. CI usa el runner `macos-26` y rechaza versiones anteriores.
 2. Selecciona tu Team de pago.
 3. Confirma NFC en Signing & Capabilities.
 4. Product > Archive.
