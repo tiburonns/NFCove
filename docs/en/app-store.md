@@ -38,6 +38,8 @@ The current release has no analytics SDK, advertising SDK, account system, or NF
 
 A public privacy-policy URL is still required in App Store Connect. The ready-to-host policy text is in [privacy-policy.md](privacy-policy.md).
 
+After publishing the privacy policy and support pages, set the target build settings `NFCOVE_PRIVACY_POLICY_URL` and `NFCOVE_SUPPORT_URL` to the same public HTTPS URLs used in App Store Connect. NFCove only shows these links in Settings when they contain valid HTTPS URLs; empty values are intentionally hidden.
+
 ## Screenshots
 
 Prepare English and Spanish screenshots from the final signed build:
