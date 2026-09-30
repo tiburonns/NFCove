@@ -1,14 +1,23 @@
+import CoreNFC
 import SwiftUI
 
 struct SavedScanDetailView: View {
     let card: SavedScanCard
+    @ObservedObject var manager: NFCSessionManager
+
+    private var message: NFCNDEFMessage? {
+        NDEFBuilder.message(from: card)
+    }
 
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 10) {
-                    Label(card.name, systemImage: "sensor.tag.radiowaves.forward")
-                        .font(.title3.bold())
+                    Label(
+                        card.name,
+                        systemImage: "sensor.tag.radiowaves.forward"
+                    )
+                    .font(.title3.bold())
 
                     HStack(spacing: 14) {
                         Label {
@@ -18,8 +27,11 @@ struct SavedScanDetailView: View {
                         }
 
                         if let capacity = card.tagCapacity {
-                            Label("\(capacity) B", systemImage: "externaldrive")
-                                .monospacedDigit()
+                            Label(
+                                "\(capacity) B",
+                                systemImage: "externaldrive"
+                            )
+                            .monospacedDigit()
                         }
                     }
                     .font(.caption)
@@ -36,6 +48,7 @@ struct SavedScanDetailView: View {
                     }
                 }
                 .padding(.vertical, 4)
+                .accessibilityElement(children: .combine)
             }
 
             Section {
@@ -47,22 +60,95 @@ struct SavedScanDetailView: View {
                     "library.scan.payloadBytes",
                     value: "\(card.totalPayloadBytes) B"
                 )
+                LabeledContent("library.scan.copyQuality") {
+                    Text(
+                        card.hasOriginalNDEF
+                            ? "library.scan.copyQuality.exact"
+                            : "library.scan.copyQuality.reconstructed"
+                    )
+                    .foregroundStyle(
+                        card.hasOriginalNDEF
+                            ? .primary
+                            : .secondary
+                    )
+                }
             } header: {
                 Text("library.scan.info.section")
             }
 
+            Section {
+                Button {
+                    if let message {
+                        manager.beginWrite(message: message)
+                    }
+                } label: {
+                    Label(
+                        "library.scan.write",
+                        systemImage: "wave.3.right"
+                    )
+                    .frame(maxWidth: .infinity)
+                }
+                .disabled(
+                    message == nil ||
+                    manager.isActive ||
+                    !manager.isNFCAvailable
+                )
+                .accessibilityHint("library.scan.write.hint")
+            } footer: {
+                Text(
+                    card.hasOriginalNDEF
+                        ? "library.scan.write.footer.exact"
+                        : "library.scan.write.footer.reconstructed"
+                )
+            }
+
+            if manager.isActive ||
+                manager.statusKey != "nfc.status.ready" ||
+                manager.lastError != nil {
+                Section {
+                    if manager.isActive ||
+                        manager.statusKey != "nfc.status.ready" {
+                        Label {
+                            Text(
+                                LocalizedStringKey(manager.statusKey)
+                            )
+                        } icon: {
+                            Image(
+                                systemName: manager.isActive
+                                    ? "wave.3.right.circle.fill"
+                                    : "info.circle"
+                            )
+                        }
+                    }
+
+                    if let error = manager.lastError {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .textSelection(.enabled)
+                    }
+                }
+            }
+
             Section("library.scan.records.section") {
                 ForEach(card.records) { record in
-                    VStack(alignment: .leading, spacing: 7) {
+                    VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Label {
                                 if let kind = record.kind {
-                                    Text(LocalizedStringKey(kind.localizationKey))
+                                    Text(
+                                        LocalizedStringKey(
+                                            kind.localizationKey
+                                        )
+                                    )
                                 } else {
                                     Text("record.custom")
                                 }
                             } icon: {
-                                Image(systemName: record.kind?.icon ?? "doc.text")
+                                Image(
+                                    systemName: record.kind?.icon
+                                        ?? "doc.text"
+                                )
                             }
                             .font(.headline)
 
@@ -77,6 +163,37 @@ struct SavedScanDetailView: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .textSelection(.enabled)
+
+                        DisclosureGroup(
+                            "library.scan.technicalDetails"
+                        ) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                LabeledContent(
+                                    "library.scan.tnf",
+                                    value: record.typeNameFormatRaw.map {
+                                        String(
+                                            format: "0x%02X",
+                                            $0
+                                        )
+                                    } ?? "—"
+                                )
+
+                                technicalValue(
+                                    title: "library.scan.type",
+                                    value: record.typeHex
+                                )
+                                technicalValue(
+                                    title: "library.scan.identifier",
+                                    value: record.identifierHex
+                                )
+                                technicalValue(
+                                    title: "library.scan.payload",
+                                    value: record.payloadHex
+                                )
+                            }
+                            .padding(.top, 8)
+                        }
+                        .font(.caption)
                     }
                     .padding(.vertical, 4)
                 }
@@ -84,5 +201,18 @@ struct SavedScanDetailView: View {
         }
         .navigationTitle("library.scan.detail.title")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func technicalValue(
+        title: LocalizedStringKey,
+        value: String
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(title)
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.caption.monospaced())
+                .textSelection(.enabled)
+        }
     }
 }
