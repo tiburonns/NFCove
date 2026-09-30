@@ -98,7 +98,7 @@
 
 "privacy.title" = "Privacidad";
 "privacy.summary.section" = "Cómo maneja NFCove tus datos";
-"privacy.summary.footer" = "Esto describe NFCove 0.2.3. Las futuras funciones en línea o de iCloud se documentarán antes de habilitarse.";
+"privacy.summary.footer" = "Esto describe NFCove 0.3.0. Las futuras funciones en línea o de iCloud se documentarán antes de habilitarse.";
 "privacy.tracking.title" = "Sin rastreo";
 "privacy.tracking.detail" = "NFCove no te rastrea entre aplicaciones o sitios web.";
 "privacy.nfc.title" = "NFC permanece en tu dispositivo";
@@ -114,3 +114,20 @@
 "privacy.value.no" = "No";
 "privacy.value.none" = "Ninguna";
 "privacy.value.local" = "Sólo local";
+
+"library.use" = "Usar tarjeta";
+"library.use.title" = "Usar tarjeta guardada";
+"library.use.now" = "Usar ahora";
+"library.use.copy" = "Copiar texto";
+"library.use.copied" = "Copiado";
+"library.use.action.section" = "Usar";
+"library.use.action.footer" = "Usa el contenido guardado con la app correspondiente del iPhone o escribe el mismo payload NDEF en un tag físico compatible.";
+"library.use.nfc.section" = "Presentación NFC";
+"library.use.nfc.generic.title" = "La emulación NDEF genérica no está disponible";
+"library.use.nfc.generic.detail" = "Las apps de iPhone no pueden presentar cualquier tag NDEF guardado como si el iPhone fuera ese tag físico. Usa Escribir en tag para tarjetas NDEF reutilizables.";
+"library.use.nfc.secure.title" = "Credenciales contactless seguras";
+"library.use.nfc.secure.detail" = "Las credenciales elegibles respaldadas por un emisor pueden usar las capacidades NFC & SE de Apple después de aprobación y aprovisionamiento. NFCove no clona UID, tarjetas de pago, credenciales de acceso ni credenciales protegidas.";
+"library.use.write" = "Escribir tarjeta guardada en tag NFC";
+"library.use.status.ready" = "Lista para usar";
+"library.use.status.local" = "Acción local";
+"library.use.status.tag" = "Reutilizable en un tag NFC físico";

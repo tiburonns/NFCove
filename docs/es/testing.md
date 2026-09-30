@@ -1,4 +1,4 @@
-# NFCove 0.2.3 — Plan de aceptación en dispositivo físico
+# NFCove 0.3.0 — Plan de aceptación en dispositivo físico
 
 **Español** · [English](../en/testing.md)
 
@@ -39,8 +39,9 @@ Presenta dos tags simultáneamente durante lectura y escritura. NFCove debe pedi
 
 1. Guarda un elemento de cada tipo y deja el nombre opcional vacío en al menos uno.
 2. Cierra a la fuerza y abre NFCove; todos deben permanecer.
-3. Desliza un elemento y usa **Escribir en tag**; debe verificarse y escanearse correctamente.
-4. Elimina un elemento, reabre y confirma que la eliminación persista.
+3. Toca cada elemento guardado y abre **Usar tarjeta guardada**. Texto debe copiarse; URL, email, teléfono, SMS y ubicación deben resolver a la acción correspondiente del iPhone.
+4. Desde esa misma vista usa **Escribir tarjeta guardada en tag NFC**; debe verificarse y escanearse correctamente.
+5. Elimina un elemento, reabre y confirma que la eliminación persista.
 
 ## Migración de biblioteca anterior
 

@@ -98,6 +98,29 @@ enum NFCRecordContent {
         }
     }
 
+    static func actionURL(
+        for kind: NFCRecordKind,
+        value: String
+    ) -> URL? {
+        guard let normalized = normalizedValue(for: kind, value: value) else {
+            return nil
+        }
+
+        switch kind {
+        case .text:
+            return nil
+        case .url, .email, .phone, .sms:
+            return URL(string: normalized)
+        case .location:
+            let coordinates = normalized.dropFirst("geo:".count)
+            var components = URLComponents(string: "https://maps.apple.com/")
+            components?.queryItems = [
+                URLQueryItem(name: "ll", value: String(coordinates))
+            ]
+            return components?.url
+        }
+    }
+
     private static func normalizedDialString(
         _ value: String,
         removingScheme scheme: String
