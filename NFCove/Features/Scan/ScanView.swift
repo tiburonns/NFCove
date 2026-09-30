@@ -1,7 +1,12 @@
 import SwiftUI
 
 struct ScanView: View {
+    @EnvironmentObject private var library: LibraryStore
     @StateObject private var manager = NFCSessionManager()
+
+    @State private var showingSavePrompt = false
+    @State private var scanName = ""
+    @State private var didSaveScan = false
 
     var body: some View {
         NavigationStack {
@@ -68,6 +73,17 @@ struct ScanView: View {
                     )
                     .frame(maxHeight: .infinity)
                 } else {
+                    Button {
+                        scanName = ""
+                        showingSavePrompt = true
+                    } label: {
+                        Label("scan.save.button", systemImage: "square.and.arrow.down")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                    .padding(.horizontal)
+
                     List(manager.records) { record in
                         VStack(alignment: .leading, spacing: 6) {
                             HStack {
@@ -94,6 +110,28 @@ struct ScanView: View {
                 }
             }
             .navigationTitle("scan.title")
+            .alert("scan.save.title", isPresented: $showingSavePrompt) {
+                TextField("scan.save.name.placeholder", text: $scanName)
+                Button("common.cancel", role: .cancel) {}
+                Button("scan.save.confirm") {
+                    library.addScannedCard(
+                        name: scanName.isEmpty
+                            ? AppLocalization.string("scan.save.defaultName")
+                            : scanName,
+                        records: manager.records,
+                        tagCapacity: manager.tagCapacity,
+                        tagAccessKey: manager.tagAccessKey
+                    )
+                    didSaveScan = true
+                }
+            } message: {
+                Text("scan.save.message")
+            }
+            .alert("scan.save.saved.title", isPresented: $didSaveScan) {
+                Button("common.ok", role: .cancel) {}
+            } message: {
+                Text("scan.save.saved.message")
+            }
         }
     }
 }

@@ -17,13 +17,14 @@ struct NFCoveCoreLogicIntegration {
     static func main() throws {
         try testContentNormalization()
         try testSavedCardActions()
+        try testScannedTagPersistence()
         try testLibraryPersistence()
         try testLegacyMigration()
         try testCorruptLegacyMigrationPreservesBytes()
         try testCorruptStorePreservation()
         try testInvalidStoredRecordIsQuarantined()
         try testRepeatedCorruptionCreatesUniqueBackups()
-        print("PASS: NFC normalization, saved-card actions, library persistence, migration, validation, and corrupt-store preservation")
+        print("PASS: NFC normalization, saved-card actions, scanned-tag persistence, library persistence, migration, validation, and corrupt-store preservation")
     }
 
     private static func require(
@@ -155,6 +156,68 @@ struct NFCoveCoreLogicIntegration {
             mapURL?.absoluteString.contains("ll=25.6866,-100.3161") == true,
             "Saved location action resolution failed"
         )
+    }
+
+    @MainActor
+    private static func testScannedTagPersistence() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("NFCoveScans-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let itemsURL = root.appendingPathComponent("library.json")
+        let scansURL = root.appendingPathComponent("scans.json")
+        let suiteName = "NFCoveScans.\(UUID().uuidString)"
+        guard let defaults = UserDefaults(suiteName: suiteName) else {
+            throw TestFailure.failed("Could not create isolated UserDefaults suite")
+        }
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let records = [
+            NFCRecordSnapshot(
+                kind: .url,
+                title: "URL",
+                value: "https://example.com",
+                byteCount: 19
+            ),
+            NFCRecordSnapshot(
+                kind: .text,
+                title: "Text",
+                value: "Hello",
+                byteCount: 5
+            )
+        ]
+
+        let first = LibraryStore(
+            preferences: defaults,
+            storageURL: itemsURL,
+            scansStorageURL: scansURL
+        )
+        first.addScannedCard(
+            name: "Desk tag",
+            records: records,
+            tagCapacity: 504,
+            tagAccessKey: "nfc.access.readWrite"
+        )
+
+        try require(first.scannedCards.count == 1, "Scanned tag was not added")
+        try require(first.scannedCards[0].records.count == 2, "Scanned tag did not preserve all records")
+        try require(first.scannedCards[0].tagCapacity == 504, "Scanned tag capacity was not preserved")
+        try require(FileManager.default.fileExists(atPath: scansURL.path), "Scanned tag store was not created")
+
+        let second = LibraryStore(
+            preferences: defaults,
+            storageURL: itemsURL,
+            scansStorageURL: scansURL
+        )
+        try require(second.scannedCards == first.scannedCards, "Scanned tag did not round-trip from disk")
+
+        second.deleteScannedCard(at: IndexSet(integer: 0))
+        let third = LibraryStore(
+            preferences: defaults,
+            storageURL: itemsURL,
+            scansStorageURL: scansURL
+        )
+        try require(third.scannedCards.isEmpty, "Scanned tag deletion did not persist")
     }
 
     @MainActor

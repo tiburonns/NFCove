@@ -1,4 +1,4 @@
-# NFCove 0.3.0 — Plan de aceptación en dispositivo físico
+# NFCove 0.3.1 — Plan de aceptación en dispositivo físico
 
 **Español** · [English](../en/testing.md)
 
@@ -24,6 +24,8 @@ Resultado esperado: sin crash, sin interfaz encerrada en un cuadro, sin claves d
 Usa tags NDEF conocidos con Texto, URL HTTPS, email `mailto:`, teléfono `tel:`, mensaje `sms:`, ubicación `geo:`, varios records NDEF, mensaje NDEF vacío y un payload no clasificado.
 
 En cada tag inicia el escaneo, presenta un solo tag, confirma la hoja nativa de NFC, revisa capacidad/acceso cuando Core NFC lo proporcione y verifica que el contenido reconocido sea legible. El contenido NDEF desconocido debe poder inspeccionarse sin cerrar la app.
+
+Después de cada escaneo correcto pulsa **Guardar escaneo**, asígnale un nombre, abre **Biblioteca → Tags escaneados**, vuelve a abrirlo y confirma que número de records, valores, bytes, capacidad, estado de acceso y fecha permanezcan disponibles después de cerrar a la fuerza y reabrir NFCove.
 
 ## Escritura y verificación por relectura
 

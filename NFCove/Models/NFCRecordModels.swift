@@ -232,3 +232,64 @@ struct SavedNFCItem: Identifiable, Codable, Hashable, Sendable {
         self.createdAt = createdAt
     }
 }
+
+
+struct SavedScanRecord: Identifiable, Codable, Hashable, Sendable {
+    let id: UUID
+    let kind: NFCRecordKind?
+    let title: String
+    let value: String
+    let byteCount: Int
+
+    init(
+        id: UUID = UUID(),
+        kind: NFCRecordKind?,
+        title: String,
+        value: String,
+        byteCount: Int
+    ) {
+        self.id = id
+        self.kind = kind
+        self.title = title
+        self.value = value
+        self.byteCount = byteCount
+    }
+
+    init(snapshot: NFCRecordSnapshot) {
+        self.init(
+            kind: snapshot.kind,
+            title: snapshot.title,
+            value: snapshot.value,
+            byteCount: snapshot.byteCount
+        )
+    }
+}
+
+struct SavedScanCard: Identifiable, Codable, Hashable, Sendable {
+    let id: UUID
+    var name: String
+    let records: [SavedScanRecord]
+    let tagCapacity: Int?
+    let tagAccessKey: String?
+    let scannedAt: Date
+
+    init(
+        id: UUID = UUID(),
+        name: String,
+        records: [SavedScanRecord],
+        tagCapacity: Int?,
+        tagAccessKey: String?,
+        scannedAt: Date = .now
+    ) {
+        self.id = id
+        self.name = name
+        self.records = records
+        self.tagCapacity = tagCapacity
+        self.tagAccessKey = tagAccessKey
+        self.scannedAt = scannedAt
+    }
+
+    var totalPayloadBytes: Int {
+        records.reduce(0) { $0 + $1.byteCount }
+    }
+}
