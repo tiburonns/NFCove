@@ -36,12 +36,38 @@ struct LibraryView: View {
                             Section("library.scanned.section") {
                                 ForEach(library.scannedCards) { card in
                                     NavigationLink {
-                                        SavedScanDetailView(card: card)
+                                        SavedScanDetailView(
+                                            card: card,
+                                            manager: manager
+                                        )
                                     } label: {
                                         scannedCardRow(card)
                                     }
+                                    .swipeActions(
+                                        edge: .leading,
+                                        allowsFullSwipe: false
+                                    ) {
+                                        Button {
+                                            write(card)
+                                        } label: {
+                                            Label(
+                                                "library.write",
+                                                systemImage: "wave.3.right"
+                                            )
+                                        }
+                                        .tint(.accentColor)
+                                        .disabled(
+                                            manager.isActive ||
+                                            !manager.isNFCAvailable ||
+                                            NDEFBuilder.message(
+                                                from: card
+                                            ) == nil
+                                        )
+                                    }
                                 }
-                                .onDelete(perform: library.deleteScannedCard)
+                                .onDelete(
+                                    perform: library.deleteScannedCard
+                                )
                             }
                         }
 
@@ -133,8 +159,11 @@ struct LibraryView: View {
     private func scannedCardRow(_ card: SavedScanCard) -> some View {
         VStack(alignment: .leading, spacing: 5) {
             HStack {
-                Label(card.name, systemImage: "sensor.tag.radiowaves.forward")
-                    .font(.headline)
+                Label(
+                    card.name,
+                    systemImage: "sensor.tag.radiowaves.forward"
+                )
+                .font(.headline)
 
                 Spacer()
 
@@ -150,11 +179,21 @@ struct LibraryView: View {
                     .lineLimit(2)
             }
 
-            Text(card.scannedAt, style: .date)
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
+            HStack(spacing: 8) {
+                Text(card.scannedAt, style: .date)
+
+                if card.hasOriginalNDEF {
+                    Label(
+                        "library.scan.copyQuality.exact",
+                        systemImage: "checkmark.shield"
+                    )
+                }
+            }
+            .font(.caption2)
+            .foregroundStyle(.tertiary)
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
     }
 
     private func libraryRow(_ item: SavedNFCItem) -> some View {
@@ -165,9 +204,11 @@ struct LibraryView: View {
 
                 Spacer()
 
-                Text(LocalizedStringKey(item.kind.localizationKey))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text(
+                    LocalizedStringKey(item.kind.localizationKey)
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
 
             Text(item.value)
@@ -181,6 +222,7 @@ struct LibraryView: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
     }
 
     private func write(_ item: SavedNFCItem) {
@@ -188,6 +230,14 @@ struct LibraryView: View {
             for: item.kind,
             value: item.value
         ) else {
+            return
+        }
+
+        manager.beginWrite(message: message)
+    }
+
+    private func write(_ card: SavedScanCard) {
+        guard let message = NDEFBuilder.message(from: card) else {
             return
         }
 
