@@ -17,29 +17,37 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section("settings.language.section") {
-                    Picker("settings.language.picker", selection: $languageManager.selection) {
+                    Picker(
+                        "settings.language.picker",
+                        selection: $languageManager.selection
+                    ) {
                         ForEach(AppLanguage.allCases) { language in
-                            Text(LocalizedStringKey(language.localizationKey))
-                                .tag(language)
+                            Text(
+                                LocalizedStringKey(
+                                    language.localizationKey
+                                )
+                            )
+                            .tag(language)
                         }
                     }
                 }
 
                 Section("settings.about.section") {
-                    LabeledContent("settings.about.version", value: appVersion)
+                    LabeledContent(
+                        "settings.about.version",
+                        value: appVersion
+                    )
+
                     NavigationLink {
                         PrivacyView()
                     } label: {
-                        LabeledContent("settings.about.privacy") {
+                        LabeledContent(
+                            "settings.about.privacy"
+                        ) {
                             Text("settings.about.localOnly")
                                 .foregroundStyle(.secondary)
                         }
                     }
-                }
-
-                Section("settings.expert.section") {
-                    Label("settings.expert.comingSoon", systemImage: "wrench.and.screwdriver")
-                        .foregroundStyle(.secondary)
                 }
             }
             .navigationTitle("settings.title")
