@@ -95,10 +95,28 @@
 "nfc.error.verification" = "La escritura terminó, pero los datos leídos de nuevo no coinciden.";
 
 "common.ok" = "OK";
+"common.cancel" = "Cancelar";
+
+"scan.save.button" = "Guardar escaneo";
+"scan.save.title" = "Guardar tag escaneado";
+"scan.save.name.placeholder" = "Nombre";
+"scan.save.defaultName" = "Tag NFC escaneado";
+"scan.save.confirm" = "Guardar";
+"scan.save.message" = "Guarda este escaneo para volver a consultar su información desde Biblioteca.";
+"scan.save.saved.title" = "Escaneo guardado";
+"scan.save.saved.message" = "El tag escaneado ya está disponible en Biblioteca.";
+
+"library.scanned.section" = "Tags escaneados";
+"library.created.section" = "Tarjetas creadas";
+"library.scan.detail.title" = "Tag escaneado";
+"library.scan.info.section" = "Información del tag";
+"library.scan.records.section" = "Records NDEF";
+"library.scan.recordCount" = "Records";
+"library.scan.payloadBytes" = "Tamaño del payload";
 
 "privacy.title" = "Privacidad";
 "privacy.summary.section" = "Cómo maneja NFCove tus datos";
-"privacy.summary.footer" = "Esto describe NFCove 0.3.0. Las futuras funciones en línea o de iCloud se documentarán antes de habilitarse.";
+"privacy.summary.footer" = "Esto describe NFCove 0.3.1. Las futuras funciones en línea o de iCloud se documentarán antes de habilitarse.";
 "privacy.tracking.title" = "Sin rastreo";
 "privacy.tracking.detail" = "NFCove no te rastrea entre aplicaciones o sitios web.";
 "privacy.nfc.title" = "NFC permanece en tu dispositivo";
