@@ -30,29 +30,36 @@ struct LibraryView: View {
 
                         Section {
                             ForEach(library.items) { item in
-                                libraryRow(item)
-                                    .swipeActions(
-                                        edge: .leading,
-                                        allowsFullSwipe: false
-                                    ) {
-                                        Button {
-                                            write(item)
-                                        } label: {
-                                            Label(
-                                                "library.write",
-                                                systemImage: "wave.3.right"
-                                            )
-                                        }
-                                        .tint(.accentColor)
-                                        .disabled(
-                                            !manager.isNFCAvailable ||
-                                            manager.isActive ||
-                                            NDEFBuilder.message(
-                                                for: item.kind,
-                                                value: item.value
-                                            ) == nil
+                                NavigationLink {
+                                    SavedCardUseView(
+                                        item: item,
+                                        manager: manager
+                                    )
+                                } label: {
+                                    libraryRow(item)
+                                }
+                                .swipeActions(
+                                    edge: .leading,
+                                    allowsFullSwipe: false
+                                ) {
+                                    Button {
+                                        write(item)
+                                    } label: {
+                                        Label(
+                                            "library.write",
+                                            systemImage: "wave.3.right"
                                         )
                                     }
+                                    .tint(.accentColor)
+                                    .disabled(
+                                        !manager.isNFCAvailable ||
+                                        manager.isActive ||
+                                        NDEFBuilder.message(
+                                            for: item.kind,
+                                            value: item.value
+                                        ) == nil
+                                    )
+                                }
                             }
                             .onDelete(perform: library.delete)
                         }
