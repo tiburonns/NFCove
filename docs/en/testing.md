@@ -1,4 +1,4 @@
-# NFCove 0.2.3 — Physical Device Acceptance Plan
+# NFCove 0.3.0 — Physical Device Acceptance Plan
 
 [Español](../es/testing.md) · **English**
 
@@ -39,8 +39,9 @@ Present two tags simultaneously during read and write. NFCove must request a sin
 
 1. Save one item of every supported kind, leaving the optional name blank on at least one.
 2. Force-quit and reopen NFCove; all items must remain.
-3. Swipe a saved item and choose **Write to tag**; the result must verify and scan back correctly.
-4. Delete an item, relaunch, and confirm deletion persists.
+3. Tap every saved item and open **Use saved card**. Text must copy; URL, email, phone, SMS, and location must resolve to the matching iPhone action.
+4. From the same screen choose **Write saved card to NFC tag**; the result must verify and scan back correctly.
+5. Delete an item, relaunch, and confirm deletion persists.
 
 ## Legacy library migration
 
