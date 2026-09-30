@@ -322,6 +322,8 @@
 				INFOPLIST_FILE = NFCove/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 0.4.0;
+				NFCOVE_PRIVACY_POLICY_URL = "";
+				NFCOVE_SUPPORT_URL = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tiburonns.NFCove;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -343,6 +345,8 @@
 				INFOPLIST_FILE = NFCove/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 0.4.0;
+				NFCOVE_PRIVACY_POLICY_URL = "";
+				NFCOVE_SUPPORT_URL = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tiburonns.NFCove;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
