@@ -16,24 +16,28 @@ struct SavedCardUseView: View {
                         Image(systemName: item.kind.icon)
                             .font(.title2)
                             .frame(width: 46, height: 46)
-                            .background(.quaternary, in: RoundedRectangle(cornerRadius: 14))
+                            .background(
+                                .quaternary,
+                                in: RoundedRectangle(cornerRadius: 14)
+                            )
+                            .accessibilityHidden(true)
 
                         VStack(alignment: .leading, spacing: 4) {
                             Text(item.name)
                                 .font(.headline)
-                            Text(LocalizedStringKey(item.kind.localizationKey))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                            Text(
+                                LocalizedStringKey(
+                                    item.kind.localizationKey
+                                )
+                            )
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                         }
                     }
 
                     Text(item.value)
                         .font(.body)
                         .textSelection(.enabled)
-                        .foregroundStyle(.secondary)
-
-                    Label("library.use.status.ready", systemImage: "checkmark.circle.fill")
-                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.vertical, 6)
@@ -52,17 +56,25 @@ struct SavedCardUseView: View {
                             : item.kind.icon
                     )
                 }
+                .accessibilityHint("library.use.now.hint")
 
                 Button {
                     writeSavedCard()
                 } label: {
-                    Label("library.use.write", systemImage: "wave.3.right")
+                    Label(
+                        "library.use.write",
+                        systemImage: "wave.3.right"
+                    )
                 }
                 .disabled(
                     !manager.isNFCAvailable ||
                     manager.isActive ||
-                    NDEFBuilder.message(for: item.kind, value: item.value) == nil
+                    NDEFBuilder.message(
+                        for: item.kind,
+                        value: item.value
+                    ) == nil
                 )
+                .accessibilityHint("library.use.write.hint")
             } header: {
                 Text("library.use.action.section")
             } footer: {
@@ -76,7 +88,9 @@ struct SavedCardUseView: View {
                     if manager.isActive ||
                         manager.statusKey != "nfc.status.ready" {
                         Label {
-                            Text(LocalizedStringKey(manager.statusKey))
+                            Text(
+                                LocalizedStringKey(manager.statusKey)
+                            )
                         } icon: {
                             Image(
                                 systemName: manager.isActive
@@ -93,34 +107,6 @@ struct SavedCardUseView: View {
                             .textSelection(.enabled)
                     }
                 }
-            }
-
-            Section("library.use.nfc.section") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Label(
-                        "library.use.nfc.generic.title",
-                        systemImage: "sensor.tag.radiowaves.forward"
-                    )
-                    .font(.headline)
-
-                    Text("library.use.nfc.generic.detail")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.vertical, 4)
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Label(
-                        "library.use.nfc.secure.title",
-                        systemImage: "lock.shield"
-                    )
-                    .font(.headline)
-
-                    Text("library.use.nfc.secure.detail")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.vertical, 4)
             }
         }
         .navigationTitle("library.use.title")
