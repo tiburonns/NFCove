@@ -1,4 +1,4 @@
-# NFCove 0.3.0 — Physical Device Acceptance Plan
+# NFCove 0.3.1 — Physical Device Acceptance Plan
 
 [Español](../es/testing.md) · **English**
 
@@ -24,6 +24,8 @@ Expected: no launch crash, no square/constrained root UI, no localization keys e
 Use known-good NDEF tags containing Text, HTTPS URL, `mailto:` email, `tel:` phone, `sms:` message, `geo:` location, multiple NDEF records, an empty NDEF message, and an unclassified NDEF payload.
 
 For every tag: start a scan, present one tag, confirm the native NFC sheet appears, confirm capacity/access when Core NFC exposes it, and verify recognized content is human-readable. Unknown NDEF content must remain inspectable instead of crashing.
+
+After every successful scan, tap **Save scan**, give it a name, open **Library → Scanned tags**, reopen it, and verify that record count, values, byte sizes, capacity, access state, and scan date remain available after force-quitting and relaunching NFCove.
 
 ## Write and read-back verification
 
