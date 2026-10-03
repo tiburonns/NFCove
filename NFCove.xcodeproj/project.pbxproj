@@ -27,6 +27,7 @@
 		A00000000000000000000012 /* PrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000017 /* PrivacyView.swift */; };
 		A00000000000000000000013 /* SavedCardUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000018 /* SavedCardUseView.swift */; };
 		A00000000000000000000014 /* SavedScanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000019 /* SavedScanDetailView.swift */; };
+		A00000000000000000000015 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001A /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		B00000000000000000000017 /* PrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyView.swift; sourceTree = "<group>"; };
 		B00000000000000000000018 /* SavedCardUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedCardUseView.swift; sourceTree = "<group>"; };
 		B00000000000000000000019 /* SavedScanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanDetailView.swift; sourceTree = "<group>"; };
+		B0000000000000000000001A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +146,7 @@
 				B0000000000000000000000E /* Info.plist */,
 				B0000000000000000000000F /* NFCove.entitlements */,
 				B00000000000000000000016 /* PrivacyInfo.xcprivacy */,
+				B0000000000000000000001A /* Assets.xcassets */,
 				C00000000000000000000001 /* Localizable.strings */,
 				C00000000000000000000002 /* InfoPlist.strings */,
 			);
@@ -225,6 +228,7 @@
 				A0000000000000000000000E /* Localizable.strings in Resources */,
 				A0000000000000000000000F /* InfoPlist.strings in Resources */,
 				A00000000000000000000011 /* PrivacyInfo.xcprivacy in Resources */,
+				A00000000000000000000015 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,6 +318,7 @@
 		F00000000000000000000007 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = NFCove/Resources/NFCove.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
@@ -337,6 +342,7 @@
 		F00000000000000000000008 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = NFCove/Resources/NFCove.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
