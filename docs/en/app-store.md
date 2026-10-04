@@ -57,7 +57,6 @@ Use real UI from the release build. Do not show unfinished or future functionali
 
 Before submission:
 
-- Add the final App Icon / asset catalog.
 - Publish the privacy policy at a public HTTPS URL.
 - Provide a public Support URL.
 - Complete App Store Connect age-rating questions.

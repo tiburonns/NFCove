@@ -68,4 +68,4 @@ NFC reads and writes happen locally through Apple's Core NFC framework. The curr
 
 ## Status
 
-Release hardening for 0.4.0. CI targets macOS 26 / Xcode 26+, while final NFC acceptance still requires a physical NFC-capable iPhone. The final App Icon, public privacy/support URLs, screenshots, and App Store Connect metadata are external release-gate items.
+Release hardening for 0.4.0. CI targets macOS 26 / Xcode 26+, while final NFC acceptance still requires a physical NFC-capable iPhone. Public privacy/support URLs, screenshots, and App Store Connect metadata are external release-gate items.

@@ -1,8 +1,19 @@
 import Combine
-import CoreNFC
+@preconcurrency import CoreNFC
 import Foundation
 
 final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate, @unchecked Sendable {
+    private struct TagContext: @unchecked Sendable {
+        let tag: NFCNDEFTag
+        let session: NFCNDEFReaderSession
+    }
+
+    private struct WriteContext: @unchecked Sendable {
+        let message: NFCNDEFMessage
+        let tag: NFCNDEFTag
+        let session: NFCNDEFReaderSession
+    }
+
     enum Operation {
         case read
         case write(NFCNDEFMessage)
@@ -122,25 +133,27 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
         tag: NFCNDEFTag,
         in session: NFCNDEFReaderSession
     ) {
-        session.connect(to: tag) { [weak self] error in
+        let context = TagContext(tag: tag, session: session)
+
+        context.session.connect(to: context.tag) { [weak self, context] error in
             guard let self else { return }
 
             if let error {
-                fail(session: session, error: error)
+                fail(session: context.session, error: error)
                 return
             }
 
-            tag.queryNDEFStatus { [weak self] status, capacity, error in
+            context.tag.queryNDEFStatus { [weak self, context] status, capacity, error in
                 guard let self else { return }
 
                 if let error {
-                    fail(session: session, error: error)
+                    fail(session: context.session, error: error)
                     return
                 }
 
                 guard status != .notSupported else {
                     fail(
-                        session: session,
+                        session: context.session,
                         messageKey: "nfc.error.notSupported"
                     )
                     return
@@ -148,26 +161,26 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
 
                 publishTagInfo(status: status, capacity: capacity)
 
-                tag.readNDEF { [weak self] message, error in
+                context.tag.readNDEF { [weak self, context] message, error in
                     guard let self else { return }
 
                     if let readerError = error as? NFCReaderError,
                        readerError.code == .ndefReaderSessionErrorZeroLengthMessage {
-                        completeRead(messages: [], session: session)
+                        completeRead(messages: [], session: context.session)
                         return
                     }
 
                     if let error {
-                        fail(session: session, error: error)
+                        fail(session: context.session, error: error)
                         return
                     }
 
                     guard let message else {
-                        completeRead(messages: [], session: session)
+                        completeRead(messages: [], session: context.session)
                         return
                     }
 
-                    completeRead(messages: [message], session: session)
+                    completeRead(messages: [message], session: context.session)
                 }
             }
         }
@@ -178,19 +191,25 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
         to tag: NFCNDEFTag,
         in session: NFCNDEFReaderSession
     ) {
-        session.connect(to: tag) { [weak self] error in
+        let context = WriteContext(
+            message: message,
+            tag: tag,
+            session: session
+        )
+
+        context.session.connect(to: context.tag) { [weak self, context] error in
             guard let self else { return }
 
             if let error {
-                fail(session: session, error: error)
+                fail(session: context.session, error: error)
                 return
             }
 
-            tag.queryNDEFStatus { [weak self] status, capacity, error in
+            context.tag.queryNDEFStatus { [weak self, context] status, capacity, error in
                 guard let self else { return }
 
                 if let error {
-                    fail(session: session, error: error)
+                    fail(session: context.session, error: error)
                     return
                 }
 
@@ -200,30 +219,30 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
                     let key = status == .readOnly
                         ? "nfc.error.readOnly"
                         : "nfc.error.notSupported"
-                    fail(session: session, messageKey: key)
+                    fail(session: context.session, messageKey: key)
                     return
                 }
 
-                guard message.length <= capacity else {
+                guard context.message.length <= capacity else {
                     fail(
-                        session: session,
+                        session: context.session,
                         messageKey: "nfc.error.tooLarge"
                     )
                     return
                 }
 
-                tag.writeNDEF(message) { [weak self] error in
+                context.tag.writeNDEF(context.message) { [weak self, context] error in
                     guard let self else { return }
 
                     if let error {
-                        fail(session: session, error: error)
+                        fail(session: context.session, error: error)
                         return
                     }
 
                     verify(
-                        message: message,
-                        on: tag,
-                        in: session
+                        message: context.message,
+                        on: context.tag,
+                        in: context.session
                     )
                 }
             }
@@ -235,7 +254,13 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
         on tag: NFCNDEFTag,
         in session: NFCNDEFReaderSession
     ) {
-        tag.readNDEF { [weak self] actual, error in
+        let context = WriteContext(
+            message: expected,
+            tag: tag,
+            session: session
+        )
+
+        context.tag.readNDEF { [weak self, context] actual, error in
             guard let self else { return }
 
             if error != nil {
@@ -243,32 +268,32 @@ final class NFCSessionManager: NSObject, ObservableObject, NFCNDEFReaderSessionD
                     "nfc.error.verification"
                 )
                 statusKey = "nfc.status.writeUnverified"
-                session.alertMessage = AppLocalization.string(
+                context.session.alertMessage = AppLocalization.string(
                     "nfc.write.unverified"
                 )
-                session.invalidate()
+                context.session.invalidate()
                 return
             }
 
             guard let actual,
-                  Self.messagesMatch(expected, actual) else {
+                  Self.messagesMatch(context.message, actual) else {
                 lastError = AppLocalization.string(
                     "nfc.error.verification"
                 )
                 statusKey = "nfc.status.writeUnverified"
-                session.alertMessage = AppLocalization.string(
+                context.session.alertMessage = AppLocalization.string(
                     "nfc.write.unverified"
                 )
-                session.invalidate()
+                context.session.invalidate()
                 return
             }
 
             statusKey = "nfc.status.writeVerified"
             records = actual.records.map(Self.snapshot(from:))
-            session.alertMessage = AppLocalization.string(
+            context.session.alertMessage = AppLocalization.string(
                 "nfc.write.verified"
             )
-            session.invalidate()
+            context.session.invalidate()
         }
     }
 

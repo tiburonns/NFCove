@@ -89,10 +89,7 @@ struct CreateView: View {
                         Text("create.estimatedSize")
                         Spacer()
                         Text(
-                            "\(NDEFBuilder.estimatedSize(
-                                for: kind,
-                                value: value
-                            )) B"
+                            "\(NDEFBuilder.estimatedSize(for: kind, value: value)) B"
                         )
                         .monospacedDigit()
                         .foregroundStyle(.secondary)

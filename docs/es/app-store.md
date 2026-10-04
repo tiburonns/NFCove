@@ -57,7 +57,6 @@ Usa UI real de la build de release. No muestres funciones futuras o incompletas.
 
 Antes del envío:
 
-- Agregar App Icon / asset catalog definitivo.
 - Publicar la política de privacidad en una URL HTTPS pública.
 - Proporcionar una Support URL pública.
 - Completar el cuestionario de clasificación por edades.

@@ -531,8 +531,9 @@ struct NFCoveCoreLogicIntegration {
             backups.count == 1,
             "Corrupt legacy bytes were not preserved exactly once"
         )
+        let recoveredBytes = try Data(contentsOf: backups[0])
         try require(
-            try Data(contentsOf: backups[0]) == legacyBytes,
+            recoveredBytes == legacyBytes,
             "Corrupt legacy recovery file changed original bytes"
         )
     }
