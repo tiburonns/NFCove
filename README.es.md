@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="Design/AppIcon-Source.png" width="180" alt="Icono de la app NFCove">
+</p>
+
 # NFCove
 
 **Lee. Crea. Automatiza.**
@@ -64,4 +68,4 @@ Las lecturas y escrituras NFC se realizan localmente mediante Core NFC de Apple.
 
 ## Estado
 
-Hardening de release para 0.4.0. CI usa macOS 26 / Xcode 26+, mientras que la aceptación NFC final todavía requiere un iPhone físico compatible. El App Icon definitivo, URLs públicas de privacidad/soporte, capturas y metadata de App Store Connect son elementos externos del gate final.
+Hardening de release para 0.4.0. CI usa macOS 26 / Xcode 26+, mientras que la aceptación NFC final todavía requiere un iPhone físico compatible. Las URLs públicas de privacidad/soporte, capturas y metadata de App Store Connect son elementos externos del gate final.
