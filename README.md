@@ -62,6 +62,12 @@ See [docs/en/architecture.md](docs/en/architecture.md) for architecture, [docs/e
 
 NFCove is intentionally not a visual clone of existing NFC utilities. The goal is to make common NFC workflows feel like a first-class Apple platform experience: clear scan results, reliable local storage, transparent compatibility feedback, and verified writing.
 
+## Contact and feedback
+
+Questions, suggestions, bug reports, and general feedback can be sent from **Settings → Support** in NFCove or directly through [GitHub Issues](https://github.com/tiburonns/NFCove/issues). NFCove prepares the report locally and opens GitHub so it can be reviewed before publication.
+
+Do not include passwords, tag contents, access credentials, personal information, or other sensitive data. Security vulnerabilities should use GitHub's private **Security → Report a vulnerability** flow.
+
 ## Privacy
 
 NFC reads and writes happen locally through Apple's Core NFC framework. The current foundation does not require an account and does not send NFC contents to a server.
