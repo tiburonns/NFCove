@@ -62,6 +62,12 @@ Consulta [docs/es/architecture.md](docs/es/architecture.md) para la arquitectura
 
 NFCove no busca ser una copia visual de otras utilidades NFC. La meta es hacer que los flujos NFC comunes se sientan como una experiencia de primera clase del ecosistema Apple: resultados claros, almacenamiento local confiable, compatibilidad transparente y escritura verificada.
 
+## Contacto y feedback
+
+Las dudas, sugerencias, reportes de errores y feedback general pueden enviarse desde **Ajustes → Soporte** dentro de NFCove o directamente mediante [GitHub Issues](https://github.com/tiburonns/NFCove/issues). NFCove prepara el reporte localmente y abre GitHub para revisarlo antes de publicarlo.
+
+No incluyas contraseñas, contenido de tags, credenciales de acceso, información personal ni otros datos sensibles. Las vulnerabilidades de seguridad deben enviarse mediante el flujo privado **Security → Report a vulnerability** de GitHub.
+
 ## Privacidad
 
 Las lecturas y escrituras NFC se realizan localmente mediante Core NFC de Apple. La base actual no requiere una cuenta y no envía el contenido NFC a ningún servidor.
