@@ -79,7 +79,7 @@ struct SettingsView: View {
 
                     Link(destination: URL(string: "https://www.patreon.com/tiburonns")!) {
                         Label(
-                            "Support on Patreon / Apoyar en Patreon",
+                            "settings.about.patreon",
                             systemImage: "heart.fill"
                         )
                     }
