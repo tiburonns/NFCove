@@ -76,6 +76,8 @@ Hardening de release para 0.4.0. CI usa macOS 26 / Xcode 26+, mientras que la ac
 
 **[Abrir formulario de contacto y feedback](https://github.com/tiburonns/NFCove/issues/new?template=feedback.yml)**
 
+**[❤️ Apoyar el desarrollo en Patreon](https://www.patreon.com/tiburonns)**
+
 Selecciona la categoría que mejor corresponda: **Duda, Sugerencia, Error, Feedback, Compatibilidad u Otro**. Incluye la versión de la app, dispositivo/sistema y pasos para reproducir el problema cuando aplique.
 
 No publiques contraseñas, tokens, claves, direcciones privadas ni otra información personal sensible. Para vulnerabilidades de seguridad, utiliza el proceso indicado en `SECURITY.md` cuando esté disponible.
