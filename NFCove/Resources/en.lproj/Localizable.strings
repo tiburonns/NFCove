@@ -169,3 +169,18 @@
 
 "settings.about.privacyPolicy" = "Privacy Policy";
 "settings.about.support" = "Support";
+
+"settings.support.section" = "Support";
+"settings.support.feedback" = "Questions, suggestions and feedback";
+"settings.support.issues" = "Open GitHub Issues";
+"feedback.title" = "Feedback";
+"feedback.type" = "Type";
+"feedback.category" = "Category";
+"feedback.category.question" = "Question";
+"feedback.category.suggestion" = "Suggestion";
+"feedback.category.bug" = "Bug / Error";
+"feedback.category.feedback" = "General feedback";
+"feedback.message" = "Message";
+"feedback.privacy" = "Do not include passwords, tag contents, access credentials, personal information, or other sensitive data.";
+"feedback.send" = "Open in GitHub";
+"feedback.review" = "GitHub will open so you can review and publish the report yourself.";
