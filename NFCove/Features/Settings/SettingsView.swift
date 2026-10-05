@@ -20,6 +20,7 @@ struct SettingsView: View {
 
     private var supportURL: URL? {
         configuredURL(for: "NFCoveSupportURL")
+            ?? URL(string: "https://github.com/tiburonns/NFCove/issues/new?template=feedback.yml")
     }
 
     var body: some View {
