@@ -76,6 +76,13 @@ struct SettingsView: View {
                             )
                         }
                     }
+
+                    Link(destination: URL(string: "https://www.patreon.com/tiburonns")!) {
+                        Label(
+                            "Support on Patreon / Apoyar en Patreon",
+                            systemImage: "heart.fill"
+                        )
+                    }
                 }
             }
             .navigationTitle("settings.title")
