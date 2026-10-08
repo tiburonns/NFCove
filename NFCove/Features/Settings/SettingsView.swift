@@ -20,6 +20,7 @@ struct SettingsView: View {
 
     private var supportURL: URL? {
         configuredURL(for: "NFCoveSupportURL")
+            ?? URL(string: "https://github.com/tiburonns/NFCove/issues/new?template=feedback.yml")
     }
 
     var body: some View {
@@ -74,6 +75,13 @@ struct SettingsView: View {
                                 systemImage: "questionmark.circle"
                             )
                         }
+                    }
+
+                    Link(destination: URL(string: "https://www.patreon.com/tiburonns")!) {
+                        Label(
+                            "settings.about.patreon",
+                            systemImage: "heart.fill"
+                        )
                     }
                 }
             }

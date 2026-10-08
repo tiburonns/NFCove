@@ -69,3 +69,16 @@ Las lecturas y escrituras NFC se realizan localmente mediante Core NFC de Apple.
 ## Estado
 
 Hardening de release para 0.4.0. CI usa macOS 26 / Xcode 26+, mientras que la aceptación NFC final todavía requiere un iPhone físico compatible. Las URLs públicas de privacidad/soporte, capturas y metadata de App Store Connect son elementos externos del gate final.
+
+## Contacto, soporte y feedback
+
+¿Tienes una **duda**, **sugerencia**, encontraste un **error** o quieres compartir **feedback** sobre NFCove? Usa el formulario de GitHub Issues del proyecto:
+
+**[Abrir formulario de contacto y feedback](https://github.com/tiburonns/NFCove/issues/new?template=feedback.yml)**
+
+**[❤️ Apoyar el desarrollo en Patreon](https://www.patreon.com/tiburonns)**
+
+Selecciona la categoría que mejor corresponda: **Duda, Sugerencia, Error, Feedback, Compatibilidad u Otro**. Incluye la versión de la app, dispositivo/sistema y pasos para reproducir el problema cuando aplique.
+
+No publiques contraseñas, tokens, claves, direcciones privadas ni otra información personal sensible. Para vulnerabilidades de seguridad, utiliza el proceso indicado en `SECURITY.md` cuando esté disponible.
+
