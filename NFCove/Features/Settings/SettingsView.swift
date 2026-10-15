@@ -75,6 +75,16 @@ struct SettingsView: View {
                             )
                         }
                     }
+
+                    NavigationLink {
+                        FeedbackView()
+                    } label: {
+                        Label(
+                            "feedback.title",
+                            systemImage: "bubble.left.and.bubble.right"
+                        )
+                    }
+
                 }
             }
             .navigationTitle("settings.title")

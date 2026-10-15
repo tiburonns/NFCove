@@ -48,6 +48,16 @@
 "settings.about.version" = "Versión";
 "settings.about.privacy" = "Datos NFC";
 "settings.about.localOnly" = "Procesados localmente";
+"feedback.title" = "Errores, comentarios y sugerencias";
+"feedback.category" = "Categoría";
+"feedback.message" = "Mensaje";
+"feedback.privacy" = "No incluyas contraseñas ni información personal sensible.";
+"feedback.send" = "Continuar en correo";
+"feedback.emailDraft" = "Se abrirá tu app de correo con un borrador dirigido al desarrollador. Revísalo y envíalo desde allí.";
+"feedback.bug" = "Error";
+"feedback.comment" = "Comentario";
+"feedback.suggestion" = "Sugerencia";
+"feedback.other" = "Otro";
 
 "language.system" = "Idioma del sistema";
 "language.english" = "Inglés";

@@ -66,6 +66,10 @@ NFCove no busca ser una copia visual de otras utilidades NFC. La meta es hacer q
 
 Las lecturas y escrituras NFC se realizan localmente mediante Core NFC de Apple. La base actual no requiere una cuenta y no envía el contenido NFC a ningún servidor.
 
+### Comentarios
+
+Abre **Ajustes → Errores, comentarios y sugerencias** para preparar un reporte. NFCove abrirá tu app de correo con un borrador dirigido al desarrollador; revísalo y envíalo tú. El borrador incluye tu mensaje y la versión/compilación de la app, nunca el contenido de tags NFC. No se envía nada hasta que mandes el correo.
+
 ## Estado
 
 Hardening de release para 0.4.0. CI usa macOS 26 / Xcode 26+, mientras que la aceptación NFC final todavía requiere un iPhone físico compatible. Las URLs públicas de privacidad/soporte, capturas y metadata de App Store Connect son elementos externos del gate final.

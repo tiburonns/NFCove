@@ -27,6 +27,7 @@
 		A00000000000000000000012 /* PrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000017 /* PrivacyView.swift */; };
 		A00000000000000000000013 /* SavedCardUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000018 /* SavedCardUseView.swift */; };
 		A00000000000000000000014 /* SavedScanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000019 /* SavedScanDetailView.swift */; };
+		A00000000000000000000016 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001B /* FeedbackView.swift */; };
 		A00000000000000000000015 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001A /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 		B00000000000000000000018 /* SavedCardUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedCardUseView.swift; sourceTree = "<group>"; };
 		B00000000000000000000019 /* SavedScanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanDetailView.swift; sourceTree = "<group>"; };
 		B0000000000000000000001A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B0000000000000000000001B /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,7 +167,7 @@
 		E0000000000000000000000D /* Scan */ = {isa = PBXGroup; children = (B0000000000000000000000A /* ScanView.swift */,); path = Scan; sourceTree = "<group>"; };
 		E0000000000000000000000E /* Create */ = {isa = PBXGroup; children = (B0000000000000000000000B /* CreateView.swift */,); path = Create; sourceTree = "<group>"; };
 		E0000000000000000000000F /* Library */ = {isa = PBXGroup; children = (B0000000000000000000000C /* LibraryView.swift */, B00000000000000000000018 /* SavedCardUseView.swift */, B00000000000000000000019 /* SavedScanDetailView.swift */,); path = Library; sourceTree = "<group>"; };
-		E00000000000000000000010 /* Settings */ = {isa = PBXGroup; children = (B0000000000000000000000D /* SettingsView.swift */, B00000000000000000000017 /* PrivacyView.swift */,); path = Settings; sourceTree = "<group>"; };
+		E00000000000000000000010 /* Settings */ = {isa = PBXGroup; children = (B0000000000000000000000D /* SettingsView.swift */, B00000000000000000000017 /* PrivacyView.swift */, B0000000000000000000001B /* FeedbackView.swift */,); path = Settings; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -256,6 +258,7 @@
 				A00000000000000000000012 /* PrivacyView.swift in Sources */,
 				A00000000000000000000013 /* SavedCardUseView.swift in Sources */,
 				A00000000000000000000014 /* SavedScanDetailView.swift in Sources */,
+				A00000000000000000000016 /* FeedbackView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
