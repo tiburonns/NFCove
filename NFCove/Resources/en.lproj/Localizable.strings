@@ -48,6 +48,16 @@
 "settings.about.version" = "Version";
 "settings.about.privacy" = "NFC data";
 "settings.about.localOnly" = "Processed locally";
+"feedback.title" = "Bugs, comments & suggestions";
+"feedback.category" = "Category";
+"feedback.message" = "Message";
+"feedback.privacy" = "Do not include passwords or sensitive personal information.";
+"feedback.send" = "Continue in email";
+"feedback.emailDraft" = "Your email app will open with a draft addressed to the developer. Review and send it there.";
+"feedback.bug" = "Bug";
+"feedback.comment" = "Comment";
+"feedback.suggestion" = "Suggestion";
+"feedback.other" = "Other";
 
 "language.system" = "System Language";
 "language.english" = "English";

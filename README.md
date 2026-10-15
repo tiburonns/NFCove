@@ -66,6 +66,10 @@ NFCove is intentionally not a visual clone of existing NFC utilities. The goal i
 
 NFC reads and writes happen locally through Apple's Core NFC framework. The current foundation does not require an account and does not send NFC contents to a server.
 
+### Feedback
+
+Open **Settings → Bugs, comments & suggestions** to prepare a report. NFCove opens your email app with a draft addressed to the developer; review and send it yourself. The draft includes your message and app version/build, never NFC tag contents. No report is sent until you send the email.
+
 ## Status
 
 Release hardening for 0.4.0. CI targets macOS 26 / Xcode 26+, while final NFC acceptance still requires a physical NFC-capable iPhone. Public privacy/support URLs, screenshots, and App Store Connect metadata are external release-gate items.
